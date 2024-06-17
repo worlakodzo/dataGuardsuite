@@ -55,11 +55,19 @@ class User:
 
     def save(self):
         """
-        Save the current instance to the MongoDB 'user' collection.
+        Save or Update the current instance to the MongoDB 'user' collection.
         Returns:
-            pymongo.results.InsertOneResult: The result of the insert operation.
+            pymongo.results.InsertOneResult or pymongo.results.Upsert:
+            The result of the insert operation.
         """
-        res = mongo_db.user.insert_one(self.__dict__)
+        if not hasattr(self, "update_document"):
+            res = mongo_db.user.insert_one(self.__dict__)
+        else:
+            # Update existing document
+            new_value = self.__dict__
+            del new_value["_id"]
+            del new_value["update_document"]
+            res = mongo_db.user.update_one({"_id": self._id}, new_value)
         return res
 
     def send_recovery_email(self):
