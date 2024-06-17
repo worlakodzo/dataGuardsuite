@@ -2,6 +2,7 @@ import uuid
 from .. import mongo_db
 from datetime import datetime
 
+
 class BackupLog:
     """
     BackupLog class represents the backup histories.
@@ -36,3 +37,12 @@ class BackupLog:
         self.log_details = log_details
         self.created_at = datetime.utcnow()
         self.updated_at = datetime.utcnow()
+
+    def save(self):
+        """
+        Save the current instance to the MongoDB 'backup_log' collection.
+        Returns:
+            pymongo.results.InsertOneResult: The result of the insert operation.
+        """
+        res = mongo_db.backup_agent.insert_one(self.__dict__)
+        return res

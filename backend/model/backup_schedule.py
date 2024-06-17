@@ -38,6 +38,16 @@ class BackupSchedule:
         self.created_at = datetime.utcnow()
         self.updated_at = datetime.utcnow()
 
+
+    def save(self):
+        """
+        Save the current instance to the MongoDB 'backup_schedule' collection.
+        Returns:
+            pymongo.results.InsertOneResult: The result of the insert operation.
+        """
+        res = mongo_db.backup_schedule.insert_one(self.__dict__)
+        return res
+
     def get_timestamp(self) -> datetime:
         """
         Calculates the full timestamp for the next backup based on the date, hours, and minutes.

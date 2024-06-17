@@ -39,3 +39,12 @@ class Database:
         self.password = password
         self.created_at = datetime.utcnow()
         self.updated_at = datetime.utcnow()
+
+    def save(self):
+        """
+        Save the current instance to the MongoDB 'database' collection.
+        Returns:
+            pymongo.results.InsertOneResult: The result of the insert operation.
+        """
+        res = mongo_db.database.insert_one(self.__dict__)
+        return res
