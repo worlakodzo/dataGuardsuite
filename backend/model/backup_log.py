@@ -1,6 +1,6 @@
 import uuid
+from .. import mongo_db
 from datetime import datetime
-
 
 class BackupLog:
     """

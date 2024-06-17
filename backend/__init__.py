@@ -1,5 +1,6 @@
 from .storage.db import MongoDBConnection
 
+
 try:
     connection = MongoDBConnection()
     mongo_db = connection.db

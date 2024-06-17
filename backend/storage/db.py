@@ -12,12 +12,12 @@ class MongoDBConnection:
         Initializes a new MongoDBConnection instance, connecting to the MongoDB database.
         """
         # Get connection host and port
-        db_name = os.environ.get("MONGO_DB_NAME")
-        connection_string = os.environ.get("MONGO_DB_URI")
+        db_name = os.environ.get("MONGO_DATABASE")
+        connection_string = os.environ.get("MONGO_DATABASE_URI")
 
         if not db_name or not connection_string:
             raise ValueError(
-                "Both MONGO_DB_NAME and MONGO_DB_URI environment variables must be set"
+                "Both MONGO_DATABASE and MONGO_DATABASE_URI environment variables must be set"
             )
 
         try:
