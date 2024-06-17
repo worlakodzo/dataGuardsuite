@@ -2,7 +2,6 @@ import os
 import sys
 import uuid
 from flask_cors import CORS
-from functools import wraps
 from flask import Flask, jsonify
 from .storage.constant import UPLOAD_FOLDER
 from dotenv import find_dotenv, load_dotenv
