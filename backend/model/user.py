@@ -1,6 +1,10 @@
+import os
 import uuid
 from .. import mongo_db
 from datetime import datetime
+from flask_mail import Message
+from flask_jwt_extended import create_access_token
+from .. import mail, bcrypt
 
 
 class User:
@@ -36,14 +40,10 @@ class User:
         }
 
     def hashed_password(raw_password):
-        # import hash library
-        from hashlib import sha256
-
         # hash password and return hashed value
-        return sha256(str(raw_password).encode("utf-8")).hexdigest()
+        return bcrypt.generate_password_hash(raw_password).decode("utf-8")
 
     def is_authenticated(self, raw_password):
-
         new_hashed_password = self.hashed_password(raw_password)
 
         # return true if new-hashed password
@@ -52,7 +52,7 @@ class User:
             return True
         else:
             return False
-        
+
     def save(self):
         """
         Save the current instance to the MongoDB 'user' collection.
@@ -61,3 +61,13 @@ class User:
         """
         res = mongo_db.user.insert_one(self.__dict__)
         return res
+
+    def send_recovery_email(self):
+        recovery_token = create_access_token(identity=self.email, expires_delta=False)
+        msg = Message(
+            "Password Recovery",
+            sender=os.environ.get("MAIL_USERNAME"),
+            recipients=[self.email],
+        )
+        msg.body = f"Your password recovery token is: {recovery_token}"
+        mail.send(msg)
