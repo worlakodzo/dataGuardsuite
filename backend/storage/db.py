@@ -17,7 +17,7 @@ class MongoDBConnection:
 
         if not db_name or not connection_string:
             raise ValueError(
-                "Both MONGO_DB_NAME and MONGO_DB_URI environment variables must be set"
+                "Both MONGO_DATABASE and MONGO_DATABASE_URI environment variables must be set"
             )
 
         try:

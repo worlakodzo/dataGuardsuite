@@ -1,5 +1,6 @@
 import os
 
+
 UPLOAD_FOLDER = os.path.join(
     "static", f"{os.environ.get('FILE_STORAGE_PATH','sample_vol/media')}/img"
 )
