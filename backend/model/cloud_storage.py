@@ -35,3 +35,12 @@ class CloudStorage:
         self.region_name = region_name
         self.created_at = datetime.utcnow()
         self.updated_at = datetime.utcnow()
+
+    def save(self):
+        """
+        Save the current instance to the MongoDB 'cloud_storage' collection.
+        Returns:
+            pymongo.results.InsertOneResult: The result of the insert operation.
+        """
+        res = mongo_db.cloud_storage.insert_one(self.__dict__)
+        return res
