@@ -13,19 +13,7 @@ user_app = Blueprint("user_app", __name__, url_prefix="/users")
 from ..model.user import User
 
 
-# Decorators
-def login_required(f):
-    @wraps(f)
-    def wrap(*args, **kwargs):
-        if session.get("is_authenticated", None):
-            return f(*args, **kwargs)
-        else:
-            return abort("401")
-
-    return wrap
-
-
-@user_app.route("/register", methods=["POST"])
+@user_app.route("/register", methods=["POST"], strict_slashes=False)
 def register():
     try:
         data = request.get_json()
@@ -69,7 +57,7 @@ def register():
         abort(500)
 
 
-@user_app.route("/login", methods=["POST"])
+@user_app.route("/login", methods=["POST"], strict_slashes=False)
 def login():
     data = request.get_json()
     email = data.get("email")
@@ -91,38 +79,42 @@ def login():
         return jsonify({"msg": "Invalid credentials"}), 401
 
 
-@user_app.route("/logout", methods=["POST"])
+@user_app.route("/logout", methods=["POST"], strict_slashes=False)
 @jwt_required()
 def logout():
     # Invalidate the token or handle session management here if needed
     return jsonify({"msg": "User logged out successfully"}), 200
 
 
-@user_app.route("/api/password-recovery", methods=["POST"])
+@user_app.route("/password-recovery", methods=["POST"], strict_slashes=False)
 def password_recovery():
     data = request.get_json()
     email = data.get("email")
 
-    if email not in users:
+    if not User.email_exists(email):
         return jsonify({"msg": "User not found"}), 404
 
-    # send_recovery_email(email, recovery_token)
+    user: User = User.filter({"email": email})[0]
+    user.send_recovery_email()
 
-    return jsonify({"msg": "Password recovery email sent"}), 200
+    return jsonify({"msg": f"Password recovery email sent to {email}"}), 200
 
 
-@user_app.route("/api/password-reset", methods=["PUT"])
+@user_app.route("/password-reset", methods=["PUT"], strict_slashes=False)
 def password_reset():
     data = request.get_json()
     token = data.get("token")
     new_password = data.get("new_password")
 
     try:
-        email = get_jwt_identity(token)
+        identity = get_jwt_identity(token)
     except:
         return jsonify({"msg": "Invalid or expired token"}), 400
 
-    if email not in users:
+    user: User = User.filter({"email": identity["email"]})[0]
+    if not user:
         return jsonify({"msg": "User not found"}), 404
 
+    user.password_hash = user.get_hashed_password(new_password)
+    user.save()
     return jsonify({"msg": "Password reset successfully"}), 200

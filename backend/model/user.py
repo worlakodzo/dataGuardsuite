@@ -26,7 +26,7 @@ class User:
         self._id = str(uuid.uuid4())
         self.username = username
         self.email = email
-        self.password_hash = self.hashed_password(password)
+        self.password_hash = self.get_hashed_password(password)
         self.created_at = datetime.utcnow()
         self.updated_at = datetime.utcnow()
         self.is_active = True
@@ -39,7 +39,7 @@ class User:
             "updated_at": datetime.utcnow(),
         }
 
-    def hashed_password(raw_password):
+    def get_hashed_password(self, raw_password: str):
         # hash password and return hashed value
         return bcrypt.generate_password_hash(raw_password).decode("utf-8")
 
