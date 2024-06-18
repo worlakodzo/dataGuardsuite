@@ -44,7 +44,7 @@ class User:
         return bcrypt.generate_password_hash(raw_password).decode("utf-8")
 
     def is_authenticated(self, raw_password):
-        new_hashed_password = self.hashed_password(raw_password)
+        new_hashed_password = self.get_hashed_password(raw_password)
 
         # return true if new-hashed password
         # is equal to user hashed password in database
@@ -123,7 +123,7 @@ class User:
 
         objects = []
         for _, document in enumerate(res):
-            new_obj = User()
+            new_obj = User(None, None, "None")
             for key, value in document.items():
                 setattr(new_obj, key, value)
 

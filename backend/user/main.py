@@ -59,24 +59,29 @@ def register():
 
 @user_app.route("/login", methods=["POST"], strict_slashes=False)
 def login():
-    data = request.get_json()
-    email = data.get("email")
-    password = data.get("password")
+    try:
+        data = request.get_json()
+        email = data.get("email")
+        password = data.get("password")
 
-    user: User = User.filter({"email": email})[0]
+        user: User = User.filter({"email": email})[0]
+        print(user)
 
-    if user and user.is_authenticated(password):
-        # Create access token
-        access_token = create_access_token(
-            identity={
-                "user_id": user._id,
-                "username": user.username,
-                "email": user.email,
-            }
-        )
-        return jsonify(access_token=access_token), 200
-    else:
-        return jsonify({"msg": "Invalid credentials"}), 401
+        if user and user.is_authenticated(password):
+            # Create access token
+            access_token = create_access_token(
+                identity={
+                    "user_id": user._id,
+                    "username": user.username,
+                    "email": user.email,
+                }
+            )
+            return jsonify(access_token=access_token), 200
+        else:
+            return jsonify({"msg": "Invalid credentials"}), 401
+    except Exception as err:
+        print(str(err))
+        abort(500)
 
 
 @user_app.route("/logout", methods=["POST"], strict_slashes=False)
@@ -88,33 +93,43 @@ def logout():
 
 @user_app.route("/password-recovery", methods=["POST"], strict_slashes=False)
 def password_recovery():
-    data = request.get_json()
-    email = data.get("email")
+    try:
+        data = request.get_json()
+        email = data.get("email")
 
-    if not User.email_exists(email):
-        return jsonify({"msg": "User not found"}), 404
+        if not User.email_exists(email):
+            return jsonify({"msg": "User not found"}), 404
 
-    user: User = User.filter({"email": email})[0]
-    user.send_recovery_email()
+        user: User = User.filter({"email": email})[0]
+        user.send_recovery_email()
 
-    return jsonify({"msg": f"Password recovery email sent to {email}"}), 200
+        return jsonify({"msg": f"Password recovery email sent to {email}"}), 200
+    except Exception as err:
+        print(str(err))
+        abort(500)
+
 
 
 @user_app.route("/password-reset", methods=["PUT"], strict_slashes=False)
 def password_reset():
-    data = request.get_json()
-    token = data.get("token")
-    new_password = data.get("new_password")
-
     try:
-        identity = get_jwt_identity(token)
-    except:
-        return jsonify({"msg": "Invalid or expired token"}), 400
+        data = request.get_json()
+        token = data.get("token")
+        new_password = data.get("new_password")
 
-    user: User = User.filter({"email": identity["email"]})[0]
-    if not user:
-        return jsonify({"msg": "User not found"}), 404
+        try:
+            identity = get_jwt_identity(token)
+        except:
+            return jsonify({"msg": "Invalid or expired token"}), 400
 
-    user.password_hash = user.get_hashed_password(new_password)
-    user.save()
-    return jsonify({"msg": "Password reset successfully"}), 200
+        user: User = User.filter({"email": identity["email"]})[0]
+        if not user:
+            return jsonify({"msg": "User not found"}), 404
+
+        user.password_hash = user.get_hashed_password(new_password)
+        user.save()
+        return jsonify({"msg": "Password reset successfully"}), 200
+    
+    except Exception as err:
+        print(str(err))
+        abort(500)
