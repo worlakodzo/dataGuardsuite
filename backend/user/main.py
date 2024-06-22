@@ -65,8 +65,7 @@ def login():
         password = data.get("password")
 
         user: User = User.filter({"email": email})[0]
-        print(user)
-
+        
         if user and user.is_authenticated(password):
             # Create access token
             access_token = create_access_token(
@@ -81,8 +80,8 @@ def login():
             return jsonify({"msg": "Invalid credentials"}), 401
     except Exception as err:
         print(str(err))
-        abort(500)
-
+        return jsonify({"msg": "Invalid credentials"}), 401
+    
 
 @user_app.route("/logout", methods=["POST"], strict_slashes=False)
 @jwt_required()
