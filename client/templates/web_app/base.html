@@ -17,13 +17,13 @@
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
   <!-- Lib CSS Files -->
-  <link href="{{url_for('static', filename='lib/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-  <link href="{{url_for('static', filename='lib/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
-  <link href="{{url_for('static', filename='lib/boxicons/css/boxicons.min.css')}}" rel="stylesheet">
-  <link href="{{url_for('static', filename='lib/quill/quill.snow.css')}}" rel="stylesheet">
-  <link href="{{url_for('static', filename='lib/quill/quill.bubble.css')}}" rel="stylesheet">
-  <link href="{{url_for('static', filename='lib/remixicon/remixicon.css')}}" rel="stylesheet">
-  <link href="{{url_for('static', filename='lib/simple-datatables/style.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='libs/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='libs/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='libs/boxicons/css/boxicons.min.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='libs/quill/quill.snow.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='libs/quill/quill.bubble.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='libs/remixicon/remixicon.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='libs/simple-datatables/style.css')}}" rel="stylesheet">
 
   <!-- Main CSS File -->
   <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet">
@@ -115,9 +115,9 @@
 
       
       <li class="nav-item">
-        <a class="nav-link {% if is_manage_credential %}-{%else%}collapsed{%endif%}" href="#">
+        <a class="nav-link {% if is_db_credential %}-{%else%}collapsed{%endif%}" href="#">
           <i class="bi bi-key"></i>
-          <span>Manage Credentials</span>
+          <span>DB Credentials</span>
         </a>
       </li>
 
@@ -145,11 +145,11 @@
 
   <!-- JS Files -->
 
-  <script src="{{url_for('static', filename='lib/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-  <script src="{{url_for('static', filename='lib/chart.js/chart.min.js')}}"></script>
-  <script src="{{url_for('static', filename='lib/echarts/echarts.min.js')}}"></script>
-  <script src="{{url_for('static', filename='lib/simple-datatables/simple-datatables.js')}}"></script>
-  <script src="{{url_for('static', filename='lib/php-email-form/validate.js')}}"></script>
+  <script src="{{url_for('static', filename='libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{url_for('static', filename='libs/chart.js/chart.min.js')}}"></script>
+  <script src="{{url_for('static', filename='libs/echarts/echarts.min.js')}}"></script>
+  <script src="{{url_for('static', filename='libs/simple-datatables/simple-datatables.js')}}"></script>
+  <script src="{{url_for('static', filename='libs/php-email-form/validate.js')}}"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
   <script src="{{url_for('static', filename='js/notify.min.js')}}"></script>
 
