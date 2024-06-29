@@ -14,4 +14,8 @@ const parseJwt = (token) => {
     return JSON.parse(base64);
 }
 
-export { parseJwt };
+const getToken = () => {
+    return sessionStorage.getItem('token');
+}
+
+export { parseJwt, getToken };
