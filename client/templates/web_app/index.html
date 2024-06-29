@@ -1,0 +1,114 @@
+{% extends 'web_app/base.html' %}
+{% block title %} Dashboard | dataGuardSuite {% endblock %}
+
+
+
+
+{% block content  %}
+
+<div class="pagetitle">
+  <h1>Dashboard</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{url_for('dashboard')}}">Home</a></li>
+      <li class="breadcrumb-item active">Dashboard</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<section class="section dashboard">
+  <div class="row">
+
+    <!-- Left side columns -->
+    <div class="col-lg-6">
+      <div class="row">
+
+            <!-- Users Card -->
+            <div class="col-xxl-6 col-md-6">
+              <div class="card info-card sales-card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Users</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-person"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{user_count}}</h6>
+                      <span class="text-success small pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1"></span>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Users Card -->
+
+
+            <!-- Job Card -->
+            <div class="col-xxl-6 col-md-6">
+              <div class="card info-card sales-card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Jobs</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-list-task"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{jobs_count}}</h6>
+                      <span class="text-success small pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1"></span>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Job Card -->
+
+
+
+      </div>
+    </div><!-- End Left side columns -->
+
+    <!-- Right side columns -->
+    <div class="col-lg-6">
+
+      <!-- Recent Activity -->
+      <div class="card">
+
+        <div class="card-body">
+          <h5 class="card-title">Recent Activity <span></span></h5>
+
+          <div class="activity">
+            {% for log in  activity_logs %}
+
+              <div class="activity-item d-flex">
+                <div class="activite-label">{{log.timeline}}</div>
+                <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
+                <div class="activity-content">
+                  {{log.content}}
+                </div>
+              </div>            
+
+            {% endfor %}
+          </div>
+
+        </div>
+      </div><!-- End Recent Activity -->
+
+
+
+    </div><!-- End Right side columns -->
+
+  </div>
+</section>
+
+{% endblock %}
+
+{% block js %}
+<script src="{{url_for('static', filename='js/dashboard.js')}}"></script>
+{% endblock %}
+

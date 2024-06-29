@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %} Users | backUpforce+  {% endblock %}
+
+{% block content  %}
+
+<div class="pagetitle">
+    <h1>Users</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item">Pages</li>
+        <li class="breadcrumb-item active">Users</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section">
+
+    <!--BEGIN spinner-->
+
+    <div id="spinner-content" class="col-lg-12" style="margin-top: 70px;">
+    </div>
+
+    <!--END spinner-->
+
+    <div id="user-list-container" class="row">
+      <div class="col-lg-12">
+
+        <div class="card">
+          <div class="card-body">
+            <br/>
+            <div>
+                <a style="float: right;" href="{{url_for('create_user')}}" type="button" class="btn btn-primary">Add New</a>
+            </div>
+            <!-- Default Table -->
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Username</th>
+                  <th scope="col">Full name</th>
+                  <th scope="col">Is Active</th>
+                  <th scope="col">Is Admin</th>
+                  <th style="text-align: right;" scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody id="user-list-table-body">
+
+
+              </tbody>
+            </table>
+            <!-- End Default Table Example -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!--BEGIN delete user modal-->
+    <div class="modal fade" id="delete-user-modal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Confirm delete</h5>
+            <button type="button" id="delete-user-modal-close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div id="delete-user-content" class="modal-body">
+          
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" id="confirm-delete" class="btn btn-danger">Delete</button>
+          </div>
+
+          <p style="color: red;" id="delete-user-error-notify"></p>
+        </div>
+      </div>
+    </div><!--END delete user modal-->
+
+
+  </section>
+
+
+{% endblock %}
+{% block js %}
+<script src="{{url_for('static', filename='js/users.js')}}"></script>
+{% endblock %}

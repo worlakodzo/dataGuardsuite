@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block title %} {{action_type}} Job | backupforce+{% endblock %}
+
+{% block headblock %}
+
+
+{% endblock %}
+
+{% block content %}
+<div class="pagetitle">
+  <h1 id="job-action-type" data-action-type="{{action_type}}">{{action_type}} Job</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{url_for('job.job_list')}}">Home</a></li>
+      <li class="breadcrumb-item active">Jobs</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<style>
+
+  .other-info {
+    margin-bottom: 15px;
+  }
+</style>
+
+<section class="section">
+    <div class="row">  
+
+
+      <div class="col-lg-8">
+       <form id="job-form" style="display: none;" action="#" data-method-type="{{method}}" data-job-id="{{job_id}}">
+
+
+            <div class="col-lg-12">
+
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">General Information</h5>
+
+
+                    <div  class="col-12 other-info">
+                      <label for="job-name" class="form-label"><strong>Job name</strong><span style="color: red;">*</span></label>
+                      <input type="text" class="form-control" id="job-name">
+                      <p id="job-name-error" style="color: red; display: none;">Job name required</p>
+                    </div>
+
+
+                    <div class="col-md-12 other-info">
+                      <label for="description" class="form-label"><strong>Description</strong></label>
+                      <textarea class="form-control" id="description" rows="4"></textarea>
+                    </div>
+
+
+                    <div style="margin-top: 50px;" class="col-md-12 other-info">
+                        <input class="form-check-input" type="checkbox" id="enable-automatic-backed-up" checked>
+                        <label class="form-check-label" for="enable-automatic-backed-up">
+                          Enable automatic backed up
+                        </label>
+                    </div>
+
+
+                </div>
+              </div>
+
+
+            </div>
+
+            <div class="col-lg-12">
+
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Duration</h5>
+
+
+                    <div  class="col-6 other-info">
+                      <label for="job-start-time" class="form-label"><strong>Job Start time</strong><span style="color: red;">*</span></label>
+                      <input id="job-start-time" type="time" class="form-control">
+                      <p id="job-start-time-error" style="color: red; display: none;">Job Start time required</p>
+                    </div>
+
+
+                    <div class="col-6 other-info">
+                      <label for="interval-type" class="form-label"><strong>Interval</strong> <span style="color: red;">*</span></label>
+                      <select id="interval-type" class="form-select">
+                      </select>
+                      <p id="interval-type-error" style="color: red; display: none;">Interval required</p>
+                    </div>
+
+                    <div class="col-6 other-info">
+                      <label for="interval-value" class="form-label"><strong>Interval Value</strong> <span style="color: red;">*</span></label>
+                      <input type="number" class="form-control" id="interval-value">
+                      <p id="interval-value-error" style="color: red; display: none;">Interval Value url required</p>
+                    </div>
+
+                </div>
+              </div>
+
+
+            </div>
+
+
+
+            <div class="col-lg-12">
+
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Credentials</h5>
+
+
+                    <div class="col-12 other-info">
+                      <label for="database-credential-id" class="form-label"><strong>Database credential ID</strong> <span style="color: red;">*</span></label>
+                      <select  id="database-credential-id" class="form-select">
+                      </select>
+                      <p id="database-credential-id-error" style="color: red; display: none;">Database Credential required</p>
+                    </div>
+
+
+                    <div class="col-12 other-info">
+                      <label for="backup-storage-provider-credential-id" class="form-label"><strong>Backup storage provider credential ID</strong> <span style="color: red;">*</span></label>
+                      <select  id="backup-storage-provider-credential-id" class="form-select">
+                      </select>
+                      <p id="backup-storage-provider-credential-id-error" style="color: red; display: none;">Backup storage provider required</p>
+                    </div>
+
+
+
+                </div>
+              </div>
+
+
+            </div>
+
+            <div>
+              <button style="float: right;" id="btn-save-job" type="submit" class="btn btn-primary">Save</button>
+              <a style="float: right; margin-right: 5px;" href="{{url_for('job.job_list')}}" type="button" class="btn btn-secondary">Cancel</a>
+            </div>
+
+            <!--Begin Error-->
+            <div id="error-container" style="display: none; margin-top: 80px;" class="alert alert-danger alert-dismissible fade show" role="alert">
+              <p id="error-content">Error message!</p>
+            </div>
+            <!--End Error-->
+       </form>
+
+
+
+      <!-- End page with stripped rows -->
+        <!-- Center aligned spinner -->
+        <div class="d-flex justify-content-center">
+          <div id="page-spinner" style="display: block;" class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      <!-- End Center aligned spinner -->
+
+
+      </div>
+
+
+    </div>
+  </section>
+
+
+
+{% endblock %}
+
+{% block js %}
+<script src="{{url_for('static', filename='js/jobs.js')}}"></script>
+{% endblock %}

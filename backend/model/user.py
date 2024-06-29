@@ -38,20 +38,17 @@ class User:
             "created_at": datetime.utcnow(),
             "updated_at": datetime.utcnow(),
         }
+        self.photo = "default.png"
 
     def get_hashed_password(self, raw_password: str):
         # hash password and return hashed value
         return bcrypt.generate_password_hash(raw_password).decode("utf-8")
 
     def is_authenticated(self, raw_password):
-        new_hashed_password = self.get_hashed_password(raw_password)
-
         # return true if new-hashed password
         # is equal to user hashed password in database
-        if self.password_hash == new_hashed_password:
-            return True
-        else:
-            return False
+        return bcrypt.check_password_hash(self.password_hash, raw_password)
+
 
     def save(self):
         """

@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %} Jobs | backupforce+  {% endblock %}
+
+{% block content  %}
+
+<div class="pagetitle">
+    <h1>Jobs</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{url_for('job.job_list')}}">Home</a></li>
+        <li class="breadcrumb-item">Pages</li>
+        <li class="breadcrumb-item active">Jobs</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section">
+
+    <!--BEGIN spinner-->
+
+    <div id="spinner-content" class="col-lg-12" style="margin-top: 70px;">
+    </div>
+
+    <!--END spinner-->
+
+    <div id="job-list-container" class="row">
+      <div class="col-lg-12">
+
+        <div class="card">
+          <div class="card-body">
+            <br/>
+            <div>
+                <a style="float: right;" href="{{url_for('job.job_add')}}" type="button" class="btn btn-primary">Add New</a>
+            </div>
+            <!-- Default Table -->
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Job name</th>
+                  <th scope="col">Start time</th>
+                  <th scope="col">Interval</th>
+                  <th scope="col">Engine</th>
+                  <th scope="col">Storage</th>
+                  <th style="text-align: right;" scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody id="job-list-table-body">
+
+
+              </tbody>
+            </table>
+            <!-- End Default Table Example -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!--BEGIN delete job modal-->
+    <div class="modal fade" id="delete-job-modal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Delete</h5>
+            <button type="button" id="delete-job-modal-close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div id="delete-job-content" class="modal-body">
+          
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" id="confirm-delete" class="btn btn-danger">Confirm delete</button>
+          </div>
+
+          <p style="color: red;" id="delete-job-error-notify"></p>
+        </div>
+      </div>
+    </div><!--END delete job modal-->
+
+
+  </section>
+
+
+{% endblock %}
+{% block js %}
+<script src="{{url_for('static', filename='js/jobs.js')}}"></script>
+{% endblock %}
