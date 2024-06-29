@@ -1,4 +1,6 @@
 //https://notifyjs.jpillora.com/
+import {base_url} from "./variables.js"
+import { getToken } from "./jwt.js"
 
 const pageLoading =  `
 <a class="btn btn" type="button" disabled>
@@ -46,6 +48,7 @@ document.addEventListener("DOMContentLoaded", function(event){
 
 const loadUsers = () => {
 
+    const url = `${base_url}/users`;
     const userListContainerEl = document.querySelector("#user-list-container");
     userListContainerEl.style.display = "none";
     const spinnerEl = document.querySelector("#spinner-content");
@@ -53,9 +56,12 @@ const loadUsers = () => {
 
 
 
-    fetch('/users', {
+    fetch(url, {
         method: "GET",
-        headers: {"Content-Type": "application/json"}
+        headers: {
+            "Content-Type": "application/json",
+             "Authorization": `Bearer ${getToken()}`
+            }
     }).then(res => {
 
         if (res.status === 200){
@@ -65,10 +71,10 @@ const loadUsers = () => {
 
         }
 
-
     }).then(dataJson => {
 
-        displayTableContent(dataJson.data)
+        console.log(dataJson);
+        displayTableContent(dataJson)
 
         userListContainerEl.style.display = "block";
         spinnerEl.innerHTML = " ";
@@ -108,14 +114,14 @@ const formatUserData = (user, count) => {
     return `
             <tr id="user-list-row-id-${user._id}" class="list-fade" scope="row">
                 <td>${count}</td>
+                <td>${user.email}</td>
                 <td>${user.username}</td>
-                <td>${user.full_name}</td>
                 <td>${user.is_active}</td>
-                <td>${user.is_admin}</td>
+                <td>${user.role_details.name}</td>
                 <td style="float: right">
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <a type="button" class="btn btn-primary" href="/user-profile/${user._id}"><i class="bi bi-eye-fill"></i></a>
-                        <a type="button" data-id="${user._id}"  data-username="${user.username}" data-bs-toggle="modal" data-bs-target="#delete-user-modal" class="btn btn-danger delete-user"><i class="bx bxs-trash-alt"></i></a>
+                        <a type="button" data-id="${user._id}" data-username="${user.email}"  data-username="${user.username}" data-bs-toggle="modal" data-bs-target="#delete-user-modal" class="btn btn-danger delete-user"><i class="bx bxs-trash-alt"></i></a>
                     </div>
                 </td>
 

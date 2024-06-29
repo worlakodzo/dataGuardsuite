@@ -26,7 +26,22 @@ def register():
 
 @app.route("/dashboard", strict_slashes=False)
 def dashboard():
-    return render_template("web_app/index.html")
+    return render_template("web_app/index.html", is_dashboard=True)
+
+
+@app.route("/users", strict_slashes=False)
+def users():
+    return render_template("web_app/user-list.html", is_user=True)
+
+
+@app.route("/users/profile", strict_slashes=False)
+def profile():
+    return render_template("web_app/users-profile.html", is_user=True)
+
+
+@app.route("/users/add", strict_slashes=False)
+def user_add():
+    return render_template("web_app/users-add.html", is_user=True)
 
 
 if __name__ == "__main__":

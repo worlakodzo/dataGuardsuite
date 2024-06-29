@@ -150,3 +150,9 @@ def password_reset():
     except Exception as err:
         print(str(err))
         abort(500)
+
+@jwt_required()
+@user_app.route("/", methods=["GET"], strict_slashes=False)
+def get_users():
+    users = User.filter({})
+    return jsonify([user.to_dict() for user in users]), 200
