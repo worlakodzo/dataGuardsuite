@@ -1,6 +1,14 @@
 import re
 from functools import wraps
-from flask import session, request, jsonify, abort, url_for, redirect, send_from_directory
+from flask import (
+    session,
+    request,
+    jsonify,
+    abort,
+    url_for,
+    redirect,
+    send_from_directory,
+)
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,
@@ -12,6 +20,13 @@ from flask import Blueprint
 
 user_app = Blueprint("user_app", __name__, url_prefix="/users")
 from ..model.user import User
+
+
+@user_app.route("/photo/<path:filename>", strict_slashes=False)
+def profile_photo(filename):
+    print(filename)
+    print(UPLOAD_FOLDER)
+    return send_from_directory(UPLOAD_FOLDER, filename)
 
 
 @user_app.route("/register", methods=["POST"], strict_slashes=False)
@@ -74,7 +89,7 @@ def login():
                     "user_id": user._id,
                     "username": user.username,
                     "email": user.email,
-                    "photo_url": url_for('user_app.profile_photo', filename=user.photo),
+                    "photo_url": f"{request.host_url}{url_for('user_app.profile_photo', filename=user.photo)}",
                 }
             )
             return jsonify(access_token=access_token), 200
@@ -83,7 +98,7 @@ def login():
     except Exception as err:
         print(str(err))
         return jsonify({"msg": "Invalid credentials"}), 401
-    
+
 
 @user_app.route("/logout", strict_slashes=False)
 @jwt_required()
@@ -112,7 +127,6 @@ def password_recovery():
         abort(500)
 
 
-
 @user_app.route("/password-reset", methods=["PUT"], strict_slashes=False)
 def password_reset():
     try:
@@ -132,12 +146,7 @@ def password_reset():
         user.password_hash = user.get_hashed_password(new_password)
         user.save()
         return jsonify({"msg": "Password reset successfully"}), 200
-    
+
     except Exception as err:
         print(str(err))
         abort(500)
-
-
-@user_app.route('/photo/<filename>')
-def profile_photo(filename):
-	return send_from_directory(UPLOAD_FOLDER, filename)

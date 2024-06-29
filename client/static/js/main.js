@@ -1,4 +1,4 @@
-import { base_url } from "./variables";
+import { base_url } from './variables.js';
 
 (function() {
   "use strict";
@@ -223,10 +223,10 @@ import { base_url } from "./variables";
   // Use sessionStorage to get the user name and photo
   const userProfile = select('#user-profile');
   if (userProfile) {
-    userData = sessionStorage.getItem('userData');
+    const userData = JSON.parse(sessionStorage.getItem('userData'));
     const userName = document.getElementById('user-name');
     const userPhoto = document.getElementById('user-photo');
-    userName.innerHTML = userData.username;
+    userName.innerHTML = userData.email;
     userPhoto.src = userData.photo_url;
 
     // Set the logout button to redirect to the login page
@@ -237,7 +237,7 @@ import { base_url } from "./variables";
       e.preventDefault();
       window.location.href ='/login';
     });
-    
+
   }
   
 
