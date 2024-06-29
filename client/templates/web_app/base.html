@@ -144,19 +144,17 @@
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- JS Files -->
-  <script src="{{url_for('static', filename='lib/apexcharts/apexcharts.min.js')}}"></script>
+
   <script src="{{url_for('static', filename='lib/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
   <script src="{{url_for('static', filename='lib/chart.js/chart.min.js')}}"></script>
   <script src="{{url_for('static', filename='lib/echarts/echarts.min.js')}}"></script>
-  <script src="{{url_for('static', filename='lib/quill/quill.min.js')}}"></script>
   <script src="{{url_for('static', filename='lib/simple-datatables/simple-datatables.js')}}"></script>
-  <script src="{{url_for('static', filename='lib/tinymce/tinymce.min.js')}}"></script>
   <script src="{{url_for('static', filename='lib/php-email-form/validate.js')}}"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
   <script src="{{url_for('static', filename='js/notify.min.js')}}"></script>
 
 
-  <script src="{{url_for('static', filename='js/main.js')}}"></script>
+  <script type="module" src="{{url_for('static', filename='js/main.js')}}"></script>
 
 
   {% block js %}

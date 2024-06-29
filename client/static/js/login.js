@@ -41,7 +41,7 @@ const login = async (body) =>  {
     // Save the token in the session storage
     const tokenDecodedJson = parseJwt(data.access_token);
     sessionStorage.setItem('token', data.access_token);
-    sessionStorage.setItem('userData', tokenDecodedJson.sub);
+    sessionStorage.setItem('userData', JSON.stringify(tokenDecodedJson.sub));
 
     // Redirect to the dashboard
     window.location.href = '/dashboard';

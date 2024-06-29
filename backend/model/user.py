@@ -49,7 +49,6 @@ class User:
         # is equal to user hashed password in database
         return bcrypt.check_password_hash(self.password_hash, raw_password)
 
-
     def save(self):
         """
         Save or Update the current instance to the MongoDB 'user' collection.

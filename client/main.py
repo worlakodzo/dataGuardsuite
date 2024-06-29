@@ -14,14 +14,15 @@ def index():
     return render_template("landing_page/index.html")
 
 
-
 @app.route("/login", strict_slashes=False)
 def login():
     return render_template("web_app/login.html")
 
+
 @app.route("/register", strict_slashes=False)
 def register():
     return render_template("web_app/register.html")
+
 
 @app.route("/dashboard", strict_slashes=False)
 def dashboard():
