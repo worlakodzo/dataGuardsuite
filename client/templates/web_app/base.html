@@ -10,31 +10,24 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="{{url_for('static', filename='img/favi.png')}}" rel="icon">
-  <link href="{{url_for('static', filename='img/apple-touch.png')}}" rel="apple-touch-icon">
+  <link href="{{url_for('static', filename='img/favico.png')}}" rel="icon">
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
-  <!-- Vendor CSS Files -->
-  <link href="{{url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-  <link href="{{url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
-  <link href="{{url_for('static', filename='vendor/boxicons/css/boxicons.min.css')}}" rel="stylesheet">
-  <link href="{{url_for('static', filename='vendor/quill/quill.snow.css')}}" rel="stylesheet">
-  <link href="{{url_for('static', filename='vendor/quill/quill.bubble.css')}}" rel="stylesheet">
-  <link href="{{url_for('static', filename='vendor/remixicon/remixicon.css')}}" rel="stylesheet">
-  <link href="{{url_for('static', filename='vendor/simple-datatables/style.css')}}" rel="stylesheet">
+  <!-- Lib CSS Files -->
+  <link href="{{url_for('static', filename='lib/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='lib/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='lib/boxicons/css/boxicons.min.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='lib/quill/quill.snow.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='lib/quill/quill.bubble.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='lib/remixicon/remixicon.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='lib/simple-datatables/style.css')}}" rel="stylesheet">
 
-  <!-- Template Main CSS File -->
+  <!-- Main CSS File -->
   <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: NiceAdmin - v2.4.1
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
   {% block css %}
 
   {% endblock %}
@@ -42,12 +35,12 @@
 
 <body>
 
-  <!-- ======= Header birds ======= -->
+
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
       <a href="{{url_for('dashboard')}}" class="logo d-flex align-items-center">
-        <span class="d-none d-lg-block">backUpforce+</span>
+        <span class="d-none d-lg-block">dataGuardsuite</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -64,15 +57,15 @@
 
         <li class="nav-item dropdown pe-3">
 
-          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="{{url_for('static', filename='vol/media/img/')}}{{session['user']['photo']['path']}}" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">{{session['user']['username']}}</span>
+          <a id="user-profile" class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img id="user-photo" src="#" alt="Profile" class="rounded-circle">
+            <span id="user-name" class="d-none d-md-block dropdown-toggle ps-2"></span>
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="{{url_for('logout')}}">
+              <a id="logout-btn" class="dropdown-item d-flex align-items-center" href="#">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Log Out</span>
               </a>
@@ -96,37 +89,37 @@
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
-      </li><!-- End Dashboard Nav -->
+      </li>
 
       <li class="nav-item">
-        <a class="nav-link  {% if is_user %}-{%else%}collapsed{%endif%}" href="{{url_for('users_list')}}">
+        <a class="nav-link  {% if is_user %}-{%else%}collapsed{%endif%}" href="#">
           <i class="bi bi-person"></i>
           <span>Users</span>
         </a>
-      </li><!-- End Users Page Nav -->
+      </li>
 
       <li class="nav-item">
-        <a class="nav-link {% if is_jobs %}-{%else%}collapsed{%endif%}" href="{{url_for('job.job_list')}}">
+        <a class="nav-link {% if is_jobs %}-{%else%}collapsed{%endif%}" href="#">
           <i class="bi bi-list-task"></i>
           <span>Jobs</span>
         </a>
-      </li><!-- End Assets Page Nav -->
+      </li>
 
       <li class="nav-item">
-        <a  class="nav-link {% if is_backup %}-{%else%}collapsed{%endif%}" href="{{url_for('backup.get_backups_overview')}}">
+        <a  class="nav-link {% if is_backup %}-{%else%}collapsed{%endif%}" href="#">
           <i class="bi bi-download"></i>
           <span>Back Up</span>
         </a>
-      </li><!-- End Assets Page Nav -->
+      </li>
 
 
       
       <li class="nav-item">
-        <a class="nav-link {% if is_manage_credential %}-{%else%}collapsed{%endif%}" href="{{url_for('mcredential.credential_list')}}">
+        <a class="nav-link {% if is_manage_credential %}-{%else%}collapsed{%endif%}" href="#">
           <i class="bi bi-key"></i>
           <span>Manage Credentials</span>
         </a>
-      </li><!-- End Assets Page Nav -->
+      </li>
 
     </ul>
 
@@ -144,25 +137,25 @@
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">
-      &copy; Copyright <strong><span>Worla Portfolio</span></strong>. All Rights Reserved
+      &copy; Copyright <strong><span><a target="_blank" href="https://github.com/worlakodzo/dataGuardsuite">dataGuardsuite (click to see the source code)</a></span></strong>. All Rights Reserved
     </div>
   </footer><!-- End Footer -->
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-  <!-- Vendor JS Files -->
-  <script src="{{url_for('static', filename='vendor/apexcharts/apexcharts.min.js')}}"></script>
-  <script src="{{url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-  <script src="{{url_for('static', filename='vendor/chart.js/chart.min.js')}}"></script>
-  <script src="{{url_for('static', filename='vendor/echarts/echarts.min.js')}}"></script>
-  <script src="{{url_for('static', filename='vendor/quill/quill.min.js')}}"></script>
-  <script src="{{url_for('static', filename='vendor/simple-datatables/simple-datatables.js')}}"></script>
-  <script src="{{url_for('static', filename='vendor/tinymce/tinymce.min.js')}}"></script>
-  <script src="{{url_for('static', filename='vendor/php-email-form/validate.js')}}"></script>
+  <!-- JS Files -->
+  <script src="{{url_for('static', filename='lib/apexcharts/apexcharts.min.js')}}"></script>
+  <script src="{{url_for('static', filename='lib/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{url_for('static', filename='lib/chart.js/chart.min.js')}}"></script>
+  <script src="{{url_for('static', filename='lib/echarts/echarts.min.js')}}"></script>
+  <script src="{{url_for('static', filename='lib/quill/quill.min.js')}}"></script>
+  <script src="{{url_for('static', filename='lib/simple-datatables/simple-datatables.js')}}"></script>
+  <script src="{{url_for('static', filename='lib/tinymce/tinymce.min.js')}}"></script>
+  <script src="{{url_for('static', filename='lib/php-email-form/validate.js')}}"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
   <script src="{{url_for('static', filename='js/notify.min.js')}}"></script>
 
-  <!-- Template Main JS File -->
+
   <script src="{{url_for('static', filename='js/main.js')}}"></script>
 
 

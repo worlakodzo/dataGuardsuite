@@ -1,0 +1,114 @@
+
+{% extends 'base.html' %}
+{% block title %} User Profile | backUpforce+  {% endblock %}
+
+{% block content  %}
+
+
+ <div class="pagetitle">
+      <h1>Add User</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item">Users</li>
+          <li class="breadcrumb-item active">Add</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section profile">
+      <div class="row">
+        <div class="col-xl-2">
+        </div>
+
+        <div class="col-xl-8">
+
+          <div class="card">
+            <div class="card-body pt-3">
+
+              <div class="pt-2">
+
+                <div class="pt-3">
+
+                  <!-- Profile Edit Form -->
+                  <form method="post" id="user-data-form" data-url="/users" data-action-type="POST" action="#" enctype="multipart/form-data">
+
+
+                    <div class="row mb-3">
+                      <label for="full-name" class="col-md-4 col-lg-3 col-form-label">Username <span style="color: red;">*</span></label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="username" type="text" class="form-control" id="username" value="">
+                      </div>
+
+                      <p id="username-error" style="color: red; display: none;">Username field required</p>
+                    </div>                    
+
+                    <div class="row mb-3">
+                      <label for="full-name" class="col-md-4 col-lg-3 col-form-label">Full Name <span style="color: red;">*</span></label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="full_name" type="text" class="form-control" id="full-name" value="">
+                      </div>
+                      <p id="full-name-error" style="color: red; display: none;">Full name field required</p>
+                    </div>
+
+
+                    <div class="row mb-3">
+                      <label for="phone" class="col-md-4 col-lg-3 col-form-label">Phone <span style="color: red;">*</span></label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="phone" type="text" class="form-control" id="phone" value="">
+                      </div>
+                      <p id="phone-error" style="color: red; display: none;">Phone field required</p>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email <span style="color: red;">*</span></label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="email" type="email" class="form-control" id="email" value="">
+                      </div>
+                      <p id="email-error" style="color: red; display: none;">Email field required</p>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="password" class="col-md-4 col-lg-3 col-form-label">Password <span style="color: red;">*</span></label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="password" type="password" class="form-control" id="password" value="">
+                      </div>
+                      <p id="password-error" style="color: red; display: none;">Password field required</p>
+                    </div>
+
+
+                    <div style="margin-bottom: 25px;" class="text-center">
+                      <button type="submit" id="btn-create-user" class="btn btn-primary">Create User</button>
+                    </div>
+
+                    <div id="save-success-content-container" style="display: none;"  class="col-lg-6 alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
+                      User successfully created.
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+      
+                    <div id="save-error-content-container" style="display: none;" class="col-lg-6 alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+                      <p id="save-error-content"></p>
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  </form><!-- End Profile Edit Form -->
+
+                </div>
+
+              </div><!-- End Bordered Tabs -->
+
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="col-xl-2">
+        </div>        
+      </div>
+    </section>
+
+{% endblock %}
+
+{% block js %}
+<script src="{{url_for('static', filename='js/users.js')}}"></script>
+{% endblock %}

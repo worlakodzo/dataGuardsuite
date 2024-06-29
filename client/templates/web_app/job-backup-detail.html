@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %} Backup | backupforce+{% endblock %}
+
+{% block headblock %}
+
+
+{% endblock %}
+
+{% block content %}
+<div class="pagetitle">
+  <h1 id="job-action-type">Backup</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{url_for('job.job_list')}}">Home</a></li>
+      <li class="breadcrumb-item active">Backup Overview</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+<style>
+
+  .other-info {
+    margin-bottom: 15px;
+  }
+</style>
+
+<section class="section">
+    <div class="row">  
+
+
+      <div id="backup-detail-container" class="col-lg-12">
+
+
+        <div class="col-lg-12">
+
+            <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">All Jobs</h5>
+
+
+                <div  class="col-12 other-info">
+                    <img height="80" style="margin-bottom: 30px;" src="{{url_for('static', filename='img/db/database-backup.png')}}"/>
+                    <h4>Back Up Status</h4>
+                    <p>20.5 GB of data backed up</p>
+                    <p>Last backed up: 22/01/22</p>
+                </div>
+
+
+                <div style="margin-top: 50px;" class="col-12 other-info">
+                    <a style="float: left;" href="#" id="on-demand-backup" type="button" class="btn btn-success">Backup On Demand</a>
+                </div>
+
+
+                <div style="margin-top: 180px;"  class="col-12 other-info">
+                    <label class="form-label"><strong>Back up History</strong></label>
+
+                    <!-- Default Table -->
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Filename</th>
+                            <th scope="col">Job</th>
+                            <th scope="col">Engine</th>
+                            <th scope="col">Storage</th>
+                            <th scope="col">Last Backed up</th>
+                            <th style="text-align: right;" scope="col">Size</th>
+                        </tr>
+                        </thead>
+                        <tbody id="job-list-table-body">
+        
+        
+                        </tbody>
+                    </table>
+                    <!-- End Default Table Example -->
+                </div>
+
+
+
+            </div>
+            </div>
+
+
+        </div>
+
+        <!--Begin Error-->
+        <div id="error-container" style="display: none; margin-top: 80px;" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <p id="error-content">Error message!</p>
+        </div>
+        <!--End Error-->
+
+
+        <!-- End page with stripped rows -->
+        <!-- Center aligned spinner -->
+        <div class="d-flex justify-content-center">
+        <div id="page-spinner" style="display: none;" class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        </div>
+        <!-- End Center aligned spinner -->
+
+
+      </div>
+
+
+    </div>
+  </section>
+
+
+
+{% endblock %}
+
+{% block js %}
+<script src="{{url_for('static', filename='js/jobs.js')}}"></script>
+{% endblock %}

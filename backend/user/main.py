@@ -1,11 +1,12 @@
 import re
 from functools import wraps
-from flask import session, request, jsonify, abort, url_for
+from flask import session, request, jsonify, abort, url_for, redirect, send_from_directory
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,
     get_jwt_identity,
 )
+from ..storage.constant import UPLOAD_FOLDER
 
 from flask import Blueprint
 
@@ -65,7 +66,7 @@ def login():
         password = data.get("password")
 
         user: User = User.filter({"email": email})[0]
-        
+
         if user and user.is_authenticated(password):
             # Create access token
             access_token = create_access_token(
@@ -73,6 +74,7 @@ def login():
                     "user_id": user._id,
                     "username": user.username,
                     "email": user.email,
+                    "photo_url": url_for('user_app.profile_photo', filename=user.photo),
                 }
             )
             return jsonify(access_token=access_token), 200
@@ -83,9 +85,11 @@ def login():
         return jsonify({"msg": "Invalid credentials"}), 401
     
 
-@user_app.route("/logout", methods=["POST"], strict_slashes=False)
+@user_app.route("/logout", strict_slashes=False)
 @jwt_required()
 def logout():
+    headers = request.headers
+    print(headers)
     # Invalidate the token or handle session management here if needed
     return jsonify({"msg": "User logged out successfully"}), 200
 
@@ -132,3 +136,8 @@ def password_reset():
     except Exception as err:
         print(str(err))
         abort(500)
+
+
+@user_app.route('/photo/<filename>')
+def profile_photo(filename):
+	return send_from_directory(UPLOAD_FOLDER, filename)

@@ -38,6 +38,7 @@ class User:
             "created_at": datetime.utcnow(),
             "updated_at": datetime.utcnow(),
         }
+        self.photo = "default.png"
 
     def get_hashed_password(self, raw_password: str):
         # hash password and return hashed value
