@@ -16,7 +16,7 @@
       </nav>
     </div><!-- End Page Title -->
 
-    <section id="user-profile-container" class="section profile">
+    <section id="user-profile-container" data-id="{{user_id}}" class="section profile">
       <div class="row">
         <div class="col-xl-4">
 
@@ -78,26 +78,26 @@
                       <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Email Notifications</label>
                       <div class="col-md-8 col-lg-9">
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="changes-made-to-account" checked>
-                          <label class="form-check-label" for="changesMade">
-                            Changes made to your account
+                          <input class="form-check-input" type="checkbox" id="changes-to-user-info">
+                          <label class="form-check-label" for="changes-to-user-info">
+                            Changes to user information
                           </label>
                         </div>
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="new-assert-added" checked>
-                          <label class="form-check-label" for="newProducts">
-                            Information on new asset added
+                          <input class="form-check-input" type="checkbox" id="daily-update-on-jobs">
+                          <label class="form-check-label" for="daily-update-on-jobs">
+                            Daily update on jobs
                           </label>
                         </div>
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="assert-expiring">
-                          <label class="form-check-label" for="proOffers">
-                            Information on assert expiring
+                          <input class="form-check-input" type="checkbox" id="new-db-credential-added">
+                          <label class="form-check-label" for="new-db-credential-added">
+                            New database credential added
                           </label>
                         </div>
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="security-notify" checked>
-                          <label class="form-check-label" for="securityNotify">
+                          <input class="form-check-input" type="checkbox" id="security-alerts" checked>
+                          <label class="form-check-label" for="security-alerts">
                             Security alerts
                           </label>
                         </div>
@@ -116,19 +116,19 @@
                   <form id="profile-change-password-form" data-id="{{user_id}}">
 
                     <div class="row mb-3">
-                      <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">New Password</label>
+                      <label for="new-password" class="col-md-4 col-lg-3 col-form-label">New Password</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="newpassword" type="password" class="form-control" id="new-password">
+                        <input name="new_password" type="password" class="form-control" id="new-password">
                       </div>
                       <p id="new-password-error" style="color: red; display: none;">New Password field required</p>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Confirm Password</label>
+                      <label for="confirm-password" class="col-md-4 col-lg-3 col-form-label">Confirm Password</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="renewpassword" type="password" class="form-control" id="renew-password">
+                        <input name="confirm_password" type="password" class="form-control" id="confirm-password">
                       </div>
-                      <p id="renew-password-error" style="color: red; display: none;">Confirm Password field required</p>
+                      <p id="confirm-password-error" style="color: red; display: none;">Confirm Password field required</p>
                     </div>
 
                     <p id="password-not-match-error" style="color: red; display: none;">Password does not matchs</p>
