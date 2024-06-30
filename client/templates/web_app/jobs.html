@@ -1,5 +1,5 @@
-{% extends 'base.html' %}
-{% block title %} Jobs | backupforce+  {% endblock %}
+{% extends 'web_app/base.html' %}
+{% block title %} Jobs | dataGuardSuite {% endblock %}
 
 {% block content  %}
 
@@ -7,7 +7,7 @@
     <h1>Jobs</h1>
     <nav>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{url_for('job.job_list')}}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{url_for('jobs')}}">Home</a></li>
         <li class="breadcrumb-item">Pages</li>
         <li class="breadcrumb-item active">Jobs</li>
       </ol>
@@ -30,7 +30,7 @@
           <div class="card-body">
             <br/>
             <div>
-                <a style="float: right;" href="{{url_for('job.job_add')}}" type="button" class="btn btn-primary">Add New</a>
+                <a style="float: right;" href="{{url_for('jobs_schedule')}}" type="button" class="btn btn-primary">Add New</a>
             </div>
             <!-- Default Table -->
             <table class="table">

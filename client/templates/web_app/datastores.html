@@ -1,6 +1,6 @@
-{% extends 'base.html' %}
+{% extends 'web_app/base.html' %}
 
-{% block title %} {{action_type}} Credentials | backupforce+{% endblock %}
+{% block title %} Datastores | dataGuardSuite{% endblock %}
 
 {% block headblock %}
 
@@ -9,11 +9,11 @@
 
 {% block content %}
 <div class="pagetitle">
-  <h1 id="job-action-type" data-action-type="{{action_type}}">Manage Credentials</h1>
+  <h1 id="job-action-type" data-action-type="{{action_type}}">Datastores</h1>
   <nav>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{{url_for('mcredential.credential_list')}}">Home</a></li>
-      <li class="breadcrumb-item active">Manage Credentials</li>
+      <li class="breadcrumb-item"><a href="{{url_for('datastores')}}">Home</a></li>
+      <li class="breadcrumb-item active">Configure Datastores</li>
     </ol>
   </nav>
 </div><!-- End Page Title -->

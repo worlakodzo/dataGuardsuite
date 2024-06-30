@@ -72,18 +72,17 @@ class User:
             del new_value["update_document"]
             res = mongo_db.user.update_one({"_id": self._id}, {"$set": new_value})
         return res
-    
+
     def update(self, data):
         for key, value in data.items():
             setattr(self, key, value)
         self.updated_at = datetime.utcnow()
         self.save()
 
-
     def delete(self):
         res = mongo_db.user.delete_one({"_id": self._id})
         return res
-    
+
     def change_password(self, data):
         self.password_hash = self.get_hashed_password(data["password"])
         self.save()
