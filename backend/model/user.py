@@ -18,7 +18,7 @@ class User:
     def collection_name(cls):
         return cls.__collection_name
 
-    def __init__(self, username: str, email: str, password: str):
+    def __init__(self, username: str, email: str, password: str, phone: str = ""):
         """
         Initializes a new User instance.
         """
@@ -36,7 +36,7 @@ class User:
             "bio": "",
             "job_title": "",
             "address": "",
-            "phone": "",
+            "phone": phone,
         }
         self.email_notification = {
             "changes_to_user_info": True,

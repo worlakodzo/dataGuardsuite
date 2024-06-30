@@ -65,6 +65,13 @@
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
 
             <li>
+              <a id="profile-btn" class="dropdown-item d-flex align-items-center" href="{{url_for('user_profile', user_id=user_id)}}">
+                <i class="bi bi-person"></i>
+                <span>Profile</span>
+              </a>
+            </li>
+
+            <li>
               <a id="logout-btn" class="dropdown-item d-flex align-items-center" href="#">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Log Out</span>

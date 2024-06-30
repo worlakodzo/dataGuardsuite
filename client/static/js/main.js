@@ -233,6 +233,9 @@ import { base_url } from './variables.js';
     const logoutBtn = select('#logout-btn');
     logoutBtn.href = base_url + '/logout';
 
+    const profileBtn = select('#profile-btn');
+    profileBtn.href = '/users/profile/' + userData.user_id;
+
     logoutBtn.addEventListener('click', function(e) {
       e.preventDefault();
       window.location.href ='/login';

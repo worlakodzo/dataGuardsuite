@@ -153,15 +153,21 @@ def password_reset():
 
 
 @jwt_required()
-@user_app.route("/", methods=["GET"], strict_slashes=False)
+@user_app.route("/", methods=["GET", "POST"], strict_slashes=False)
 def users():
-    users = User.filter({})
-    users_dict = []
-    for user in users:
-        photo_url = f"{request.host_url}{url_for('user_app.profile_photo', filename=user.photo)}"
-        users_dict.append(user.to_dict(photo_url))
-
-    return jsonify(users_dict), 200
+    if request.method == "GET":
+        users = User.filter({})
+        users_dict = []
+        for user in users:
+            photo_url = f"{request.host_url}{url_for('user_app.profile_photo', filename=user.photo)}"
+            users_dict.append(user.to_dict(photo_url))
+        return jsonify(users_dict), 200
+    
+    elif request.method == "POST":
+        data = request.get_json()
+        new_user = User(**data)
+        res = new_user.save()
+        return jsonify({"msg": "User created successfully", "user_id": res.inserted_id}), 201
 
 
 @jwt_required()

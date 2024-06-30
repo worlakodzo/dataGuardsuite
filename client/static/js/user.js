@@ -130,69 +130,53 @@ const formatUserData = (user, count) => {
 
 const saveUserData = (event) => {
     event.preventDefault();
-    console.log("Calling saveUserData")
 
-    const formEl = document.querySelector("#user-data-form");
-    const actionType = formEl.getAttribute("data-action-type");
-    const url = formEl.getAttribute("data-url");
     const btnCreateUserEl = document.getElementById("btn-create-user");
     document.querySelector("#save-error-content-container").style.display = "none";
     document.querySelector("#save-success-content-container").style.display = "none";
 
-    let isValid = false;
-    let data = {}
+    const url = `${base_url}/users`
 
-    if (actionType === "POST"){
-        isValid = validateUserSaveData();
-        const password = document.querySelector("#password").value;
-        const username = document.querySelector("#username").value;
-        const phone = document.querySelector("#phone").value;
-        const email = document.querySelector("#email").value;
-        
-        data = {
-            username: username,
-            full_name: fullName,
-            password: password,
-            phone: phone,
-            email: email
-        }
+    let isValid = validateUserSaveData();
+
+    const password = document.querySelector("#password").value;
+    const username = document.querySelector("#username").value;
+    const phone = document.querySelector("#phone").value;
+    const email = document.querySelector("#email").value;
     
-    }else {
-        isValid = validateUserSaveData();
-        
+    const data = {
+        username: username,
+        password: password,
+        phone: phone,
+        email: email
     }
 
     if (isValid){
 
         btnCreateUserEl.innerHTML = savingData;
-        // Send to server
-        fetch("/users", {
+        fetch(url, {
 
-            method: actionType,
-            headers: {"Content-Type": "application/json"},
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getToken()}`
+            },
             body: JSON.stringify(data)
 
         }).then(res => {
-
-                return res.json();
-
-        }).then(jsonData => {
-
-            if(jsonData.success){
-                // on success redirect user to user-list 
-                // page
+            if (res.status === 201){
                 $.notify("User Saved.", "success");
-                window.location.href = "/user-list";
+                btnCreateUserEl.innerHTML = "Create User";
+                window.location.href = "/users";
             }else{
-                document.querySelector("#save-error-content").innerHTML = jsonData.message;
+
+                document.querySelector("#save-error-content").innerHTML = "Failed to create user";
                 document.querySelector("#save-error-content-container").style.display = "block";
             }
 
-            btnCreateUserEl.innerHTML = "Create User";
-
         }).catch(error => {
             
-            document.querySelector("#save-error-content").innerHTML = jsonData.message;
+            document.querySelector("#save-error-content").innerHTML = jsonData.msg;
             document.querySelector("#save-error-content-container").style.display = "block";
             btnCreateUserEl.innerHTML = "Create User";
             console.error(error);
