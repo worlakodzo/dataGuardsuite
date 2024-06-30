@@ -106,7 +106,7 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link {% if is_jobs %}-{%else%}collapsed{%endif%}" href="#">
+        <a class="nav-link {% if is_jobs %}-{%else%}collapsed{%endif%}" href="{{url_for('jobs')}}">
           <i class="bi bi-list-task"></i>
           <span>Jobs</span>
         </a>
@@ -122,9 +122,9 @@
 
       
       <li class="nav-item">
-        <a class="nav-link {% if is_db_credential %}-{%else%}collapsed{%endif%}" href="#">
-          <i class="bi bi-key"></i>
-          <span>DB Credentials</span>
+        <a class="nav-link {% if is_datastores %}-{%else%}collapsed{%endif%}" href="{{url_for('datastores')}}">
+          <i class="bi bi-gear"></i>
+          <span>Configure Datastores</span>
         </a>
       </li>
 

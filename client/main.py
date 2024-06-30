@@ -44,5 +44,32 @@ def user_add():
     return render_template("web_app/users-add.html", is_user=True)
 
 
+@app.route("/datastores", strict_slashes=False)
+def datastores():
+    return render_template("web_app/datastores.html", is_datastores=True)
+
+
+@app.route("/datastores/add", strict_slashes=False)
+def datastores_add():
+    return render_template("web_app/datastores-add.html", is_datastores=True)
+
+
+@app.route("/datastores/edit/<string:datastore_id>", strict_slashes=False)
+def datastores_edit(datastore_id):
+    return render_template(
+        "web_app/datastores-edit.html", datastore_id=datastore_id, is_datastores=True
+    )
+
+
+@app.route("/jobs", strict_slashes=False)
+def jobs():
+    return render_template("web_app/jobs.html", is_jobs=True)
+
+
+@app.route("/jobs/schedule", strict_slashes=False)
+def jobs_schedule():
+    return render_template("web_app/jobs-schedule.html", is_jobs=True)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
