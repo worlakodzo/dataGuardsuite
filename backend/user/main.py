@@ -151,8 +151,48 @@ def password_reset():
         print(str(err))
         abort(500)
 
+
 @jwt_required()
 @user_app.route("/", methods=["GET"], strict_slashes=False)
-def get_users():
+def users():
     users = User.filter({})
-    return jsonify([user.to_dict() for user in users]), 200
+    users_dict = []
+    for user in users:
+        photo_url = f"{request.host_url}{url_for('user_app.profile_photo', filename=user.photo)}"
+        users_dict.append(user.to_dict(photo_url))
+
+    return jsonify(users_dict), 200
+
+
+@jwt_required()
+@user_app.route(
+    "/<string:user_id>", methods=["GET", "PUT", "DELETE", "PATCH"], strict_slashes=False
+)
+def user_details(user_id):
+    try:
+        try:
+            user = User.filter({"_id": user_id})[0]
+        except:
+            return jsonify({"msg": "User not found"}), 404
+
+        if request.method == "GET":
+            photo_url = f"{request.host_url}{url_for('user_app.profile_photo', filename=user.photo)}"
+            return jsonify(user.to_dict(photo_url)), 200
+
+        elif request.method == "PUT":
+            data = request.get_json()
+            user.update(data)
+            return jsonify(user.to_dict("")), 200
+
+        elif request.method == "DELETE":
+            user.delete()
+            return jsonify({"msg": "User deleted successfully"}), 204
+        
+        elif request.method == "PATCH":
+            data = request.get_json()
+            user.change_password(data)
+            return jsonify(user.to_dict("")), 200
+
+    except Exception as err:
+        print(str(err))
+        abort(500)

@@ -34,9 +34,15 @@ class User:
         self.role_details = {"name": "Admin", "role": "admin"}
         self.user_profile = {
             "bio": "",
-            "profile_photo_url": "",
-            "created_at": datetime.utcnow(),
-            "updated_at": datetime.utcnow(),
+            "job_title": "",
+            "address": "",
+            "phone": "",
+        }
+        self.email_notification = {
+            "changes_to_user_info": True,
+            "daily_update_on_jobs": True,
+            "new_db_credential_added": True,
+            "security_alerts": True,
         }
         self.photo = "default.png"
 
@@ -61,11 +67,26 @@ class User:
             res = mongo_db.user.insert_one(self.__dict__)
         else:
             # Update existing document
-            new_value = self.__dict__
+            new_value = self.__dict__.copy()
             del new_value["_id"]
             del new_value["update_document"]
-            res = mongo_db.user.update_one({"_id": self._id}, new_value)
+            res = mongo_db.user.update_one({"_id": self._id}, {"$set": new_value})
         return res
+    
+    def update(self, data):
+        for key, value in data.items():
+            setattr(self, key, value)
+        self.updated_at = datetime.utcnow()
+        self.save()
+
+
+    def delete(self):
+        res = mongo_db.user.delete_one({"_id": self._id})
+        return res
+    
+    def change_password(self, data):
+        self.password_hash = self.get_hashed_password(data["password"])
+        self.save()
 
     def send_recovery_email(self):
         recovery_token = create_access_token(identity=self.email, expires_delta=False)
@@ -128,17 +149,12 @@ class User:
 
         return objects
 
-    def to_dict(self):
+    def to_dict(self, photo_url):
         """
         Convert user instance to dictionary.
         """
         data_dict = self.__dict__
         data_dict["created_at"] = self.created_at.isoformat()
         data_dict["updated_at"] = self.updated_at.isoformat()
-        data_dict["user_profile"]["created_at"] = self.user_profile[
-            "created_at"
-        ].isoformat()
-        data_dict["user_profile"]["updated_at"] = self.user_profile[
-            "updated_at"
-        ].isoformat()
+        data_dict["photo_url"] = photo_url
         return data_dict

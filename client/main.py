@@ -34,9 +34,9 @@ def users():
     return render_template("web_app/user-list.html", is_user=True)
 
 
-@app.route("/users/profile", strict_slashes=False)
-def profile():
-    return render_template("web_app/users-profile.html", is_user=True)
+@app.route("/users/profile/<string:user_id>", strict_slashes=False)
+def user_profile(user_id):
+    return render_template("web_app/users-profile.html", user_id=user_id, is_user=True)
 
 
 @app.route("/users/add", strict_slashes=False)
