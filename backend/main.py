@@ -12,7 +12,7 @@ from . import app
 # Import dataGuardsuite microservices
 from .user.main import user_app
 from .backup_schedule.main import schedule_app
-from .database_config.main import db_config_app
+from .datastore.main import datastore_app
 from .backup_agent.main import backup_agent_app
 from .backup_management.main import backup_management_app
 
@@ -31,7 +31,7 @@ app.config["MAIL_USE_SSL"] = True if os.environ.get("MAIL_USE_SSL") == "true" el
 # Register microservices
 app.register_blueprint(user_app)
 app.register_blueprint(schedule_app)
-app.register_blueprint(db_config_app)
+app.register_blueprint(datastore_app)
 app.register_blueprint(backup_agent_app)
 app.register_blueprint(backup_management_app)
 

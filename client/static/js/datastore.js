@@ -1,9 +1,12 @@
-let manageCredentialTypes = [];
-let manageCredentials = [];
+import {base_url} from "./variables.js"
+import { getToken } from "./jwt.js"
+
+let datastoreTypes = [];
+let datastores = [];
 let databaseEngine = {};
 let backUpStorageProvider = {};
-let credentialCount = 0;
-let credentialData = {};
+let datastoreCount = 0;
+let datastoreData = {};
 const pageLoading =  `
 <a class="btn btn" type="button" disabled>
 <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>Fetching data...
@@ -16,62 +19,55 @@ const deletingData = `<span class="spinner-border spinner-border-sm" role="statu
 
 document.addEventListener("DOMContentLoaded", function(event){
 
-    loadManageCredentialRecord();
+    loadDatastoreRecord();
 
 
-    document.querySelector("#btn-add-new-credential").addEventListener("click", function(event){
+    document.querySelector("#add-new-datastore").addEventListener("click", function(event){
 
         const divEl = document.createElement("div");
         divEl.setAttribute("class", "col-lg-12");
-        divEl.setAttribute("data-form-id", credentialCount);
-        divEl.setAttribute("id", `credential-form-container-${credentialCount}`);
+        divEl.setAttribute("data-form-id", datastoreCount);
+        divEl.setAttribute("id", `datastore-form-container-${datastoreCount}`);
         divEl.innerHTML = `
 
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title"></h5>
 
-                        <form id="credential-form-${credentialCount}" style="display: block;" data-form-id="${credentialCount}" class="form" action="#" data-method-type="POST" data-credential-id="" data-engine-or-storage-provider="">
+                        <form id="datastore-form-${datastoreCount}" style="display: block;" data-form-id="${datastoreCount}" class="form" action="#" data-method-type="POST" data-datastore-id="" data-engine-or-storage-provider="">
 
                             <div class="col-12 other-info">
-                                <label for="type-${credentialCount}" class="form-label"><strong>Type</strong> <span style="color: red;">*</span></label>
-                                <select required id="type-${credentialCount}" data-form-id="${credentialCount}" class="form-select credential-type">
+                                <label for="type-${datastoreCount}" class="form-label"><strong>Type</strong> <span style="color: red;">*</span></label>
+                                <select required id="type-${datastoreCount}" data-form-id="${datastoreCount}" class="form-select datastore-type">
                                     <option value="" selected disabled>--please choose--</option>
-                                    ${loadCredentialTypeIntoSelectedOption()}
+                                    ${loadDatastoreTypeIntoSelectedOption()}
                                 </select>
-                                <p id="type-${credentialCount}-error" style="color: red; display: none;">Type required</p>
+                                <p id="type-${datastoreCount}-error" style="color: red; display: none;">Type required</p>
                             </div>
 
 
                             <div class="col-12 other-info">
-                                <label for="engine-or-storage-provider-${credentialCount}" id="engine-or-storage-provider-lb-${credentialCount}" class="form-label"><strong>Engine</strong> <span style="color: red;">*</span></label>
-                                <select required id="engine-or-storage-provider-${credentialCount}" data-form-id="${credentialCount}" class="form-select">
+                                <label for="engine-or-storage-provider-${datastoreCount}" id="engine-or-storage-provider-lb-${datastoreCount}" class="form-label"><strong>Engine</strong> <span style="color: red;">*</span></label>
+                                <select required id="engine-or-storage-provider-${datastoreCount}" data-form-id="${datastoreCount}" class="form-select">
                                     
 
                                 </select>
-                                <p id="engine-or-storage-provider-${credentialCount}-error" style="color: red; display: none;">Engine or Provider required</p>
+                                <p id="engine-or-storage-provider-${datastoreCount}-error" style="color: red; display: none;">Engine or Provider required</p>
                             </div>
 
+                            <div id="form-${datastoreCount}-content-detail">  
 
-                            <div id="form-${credentialCount}-content-detail">  
-
-
-
-
-                            
                             </div>
-
-
 
                             <div>
-                                <button style="float: right;" id="btn-save-credential-${credentialCount}" data-form-id="${credentialCount}"  type="submit" class="btn btn-primary">Save Changes</button>
-                                <button style="float: right; margin-right: 5px;" type="button" id="btn-delete-credential-${credentialCount}" data-form-id="${credentialCount}" class="btn btn-danger">Delete</button>
+                                <button style="float: right;" id="btn-save-datastore-${datastoreCount}" data-form-id="${datastoreCount}"  type="submit" class="btn btn-primary">Save Changes</button>
+                                <button style="float: right; margin-right: 5px;" type="button" id="btn-delete-datastore-${datastoreCount}" data-form-id="${datastoreCount}" class="btn btn-danger">Delete</button>
                             </div>
 
                         </form>
 
-                        <div id="error-container-${credentialCount}" style="display: none; margin-top: 100px;" class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <p id="error-p-${credentialCount}" ></p>
+                        <div id="error-container-${datastoreCount}" style="display: none; margin-top: 100px;" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <p id="error-p-${datastoreCount}" ></p>
                         </div>
 
                     </div>
@@ -81,19 +77,19 @@ document.addEventListener("DOMContentLoaded", function(event){
         
 
 
-        document.getElementById("credentials-container").appendChild(divEl);
+        document.getElementById("datastores-container").appendChild(divEl);
 
-        // Add listener to credential type selected
-        document.getElementById(`type-${credentialCount}`).addEventListener("change", function(event){
-            const credentialType = this.value;
+        // Add listener to datastore type selected
+        document.getElementById(`type-${datastoreCount}`).addEventListener("change", function(event){
+            const datastoreType = this.value;
             const formId = this.getAttribute("data-form-id");
             const formContentDetailEl = document.getElementById(`form-${formId}-content-detail`).innerHTML = "";
 
             // Load engine or provider
-            if (credentialType === "database_engines"){
+            if (datastoreType === "database_engines"){
                 document.getElementById(`engine-or-storage-provider-${formId}`).innerHTML = loadEngineIntoSelectedOption();
                 document.getElementById(`engine-or-storage-provider-lb-${formId}`).innerHTML = `<strong>Engine</strong> <span style="color: red;">*</span>`;
-            } else if (credentialType === "storage_providers"){
+            } else if (datastoreType === "storage_providers"){
                 document.getElementById(`engine-or-storage-provider-${formId}`).innerHTML = loadStorageProviderIntoSelectedOption();
                 document.getElementById(`engine-or-storage-provider-lb-${formId}`).innerHTML = `<strong>Provider</strong> <span style="color: red;">*</span>`;
             }
@@ -103,41 +99,41 @@ document.addEventListener("DOMContentLoaded", function(event){
 
 
         // Add listener to database engine or storage provider selected
-        document.getElementById(`engine-or-storage-provider-${credentialCount}`).addEventListener("change", function(event){
+        document.getElementById(`engine-or-storage-provider-${datastoreCount}`).addEventListener("change", function(event){
             const engineOrStorageProvider = this.value;
             const formId = this.getAttribute("data-form-id");
-            document.getElementById(`credential-form-${formId}`).setAttribute("data-engine-or-storage-provider", engineOrStorageProvider);
+            document.getElementById(`datastore-form-${formId}`).setAttribute("data-engine-or-storage-provider", engineOrStorageProvider);
             loadFormFields(engineOrStorageProvider, formId, {}, false);
         });
 
         // Add listener to delete button
-        document.getElementById(`btn-delete-credential-${credentialCount}`).addEventListener("click", function(event){
-            const credentialType = this.value;
+        document.getElementById(`btn-delete-datastore-${datastoreCount}`).addEventListener("click", function(event){
+            const datastoreType = this.value;
             const formId = this.getAttribute("data-form-id");
-            const credentialFormContainer = document.getElementById(`credential-form-container-${formId}`);
+            const datastoreFormContainer = document.getElementById(`datastore-form-container-${formId}`);
 
-            // BEGIN remove credential card
-            credentialFormContainer.classList.add("list-fade");
-            credentialFormContainer.style.opacity = '0';
-            setTimeout(() => credentialFormContainer.remove(), 1000);
-            // EMD remove credential card
+            // BEGIN remove datastore card
+            datastoreFormContainer.classList.add("list-fade");
+            datastoreFormContainer.style.opacity = '0';
+            setTimeout(() => datastoreFormContainer.remove(), 1000);
+            // EMD remove datastore card
         });
 
 
         // Add listener to form
-        document.getElementById(`credential-form-${credentialCount}`).addEventListener("submit", function(event){
+        document.getElementById(`datastore-form-${datastoreCount}`).addEventListener("submit", function(event){
             event.preventDefault();
             const engineOrStorageProvider = this.getAttribute("data-engine-or-storage-provider");
             const methodType = this.getAttribute("data-method-type");
-            const credentialId = this.getAttribute("data-credential-id");
+            const datastoreId = this.getAttribute("data-datastore-id");
             const formId = this.getAttribute("data-form-id");
             
-            saveCredential(engineOrStorageProvider, methodType, credentialId, formId);
+            savedatastore(engineOrStorageProvider, methodType, datastoreId, formId);
         });
 
 
         // Increase count
-        credentialCount += 1;
+        datastoreCount += 1;
         
 
 
@@ -150,14 +146,14 @@ document.addEventListener("DOMContentLoaded", function(event){
     document.getElementById(`confirm-delete`).addEventListener("click", function(event){
 
         const formId = this.getAttribute("data-form-id");
-        const credentialId = this.getAttribute("data-credential-id");
+        const datastoreId = this.getAttribute("data-datastore-id");
     
-        const credentialFormContainer = document.getElementById(`credential-form-container-${formId}`);
-        const confirmDeleteClose = document.getElementById("delete-credential-modal-close");
+        const datastoreFormContainer = document.getElementById(`datastore-form-container-${formId}`);
+        const confirmDeleteClose = document.getElementById("delete-datastore-modal-close");
         this.innerHTML = deletingData;
 
         // Delete data
-        fetch (`/credentials/${credentialId}`, {
+        fetch (`/datastores/${datastoreId}`, {
             method: "DELETE",
             headers: {"Content-Type": "application/json"}
         }).then(res => {
@@ -172,27 +168,27 @@ document.addEventListener("DOMContentLoaded", function(event){
 
                 this.innerHTML = "Confirm delete";
 
-                // BEGIN remove credential card
-                credentialFormContainer.classList.add("list-fade");
-                credentialFormContainer.style.opacity = '0';
-                setTimeout(() => credentialFormContainer.remove(), 1000);
-                // EMD remove credential card
+                // BEGIN remove datastore card
+                datastoreFormContainer.classList.add("list-fade");
+                datastoreFormContainer.style.opacity = '0';
+                setTimeout(() => datastoreFormContainer.remove(), 1000);
+                // EMD remove datastore card
 
                 confirmDeleteClose.click();
-                $.notify("Credential Deleted.", "success");
+                $.notify("datastore Deleted.", "success");
 
             }else{
 
                 // error prompt here
                 this.innerHTML = "Confirm delete";
-                document.getElementById("delete-credential-error-notify").innerHTML = jsonData.message;
+                document.getElementById("delete-datastore-error-notify").innerHTML = jsonData.message;
             }
 
         }).catch(err => {
             
             this.innerHTML = "Confirm delete";
             console.log(err.message);
-            document.getElementById("delete-credential-error-notify").innerHTML = err.message;
+            document.getElementById("delete-datastore-error-notify").innerHTML = err.message;
 
         });
 
@@ -209,43 +205,43 @@ document.addEventListener("DOMContentLoaded", function(event){
 });
 
 
-loadFormFields = (engineOrStorageProvider, formId, credential, hasData) => {
+loadFormFields = (engineOrStorageProvider, formId, datastore, hasData) => {
     const formContentDetailEl = document.getElementById(`form-${formId}-content-detail`);
     
     switch(engineOrStorageProvider) {
 
         case "mysql":
-            formContentDetailEl.innerHTML = loadDatabaseCredentialTemplate(formId, credential, hasData);
+            formContentDetailEl.innerHTML = loadDatastoreTemplate(formId, datastore, hasData);
           break;
         case "postgresql":
-            formContentDetailEl.innerHTML = loadDatabaseCredentialTemplate(formId, credential, hasData);
+            formContentDetailEl.innerHTML = loadDatastoreTemplate(formId, datastore, hasData);
           break;
         case "mariadb":
-            formContentDetailEl.innerHTML = loadDatabaseCredentialTemplate(formId, credential, hasData);
+            formContentDetailEl.innerHTML = loadDatastoreTemplate(formId, datastore, hasData);
           break;
         case "sqlite":
-            formContentDetailEl.innerHTML = loadDatabaseCredentialTemplate(formId, credential, hasData);
+            formContentDetailEl.innerHTML = loadDatastoreTemplate(formId, datastore, hasData);
           break;
         case "mongodb":
-            formContentDetailEl.innerHTML = loadDatabaseCredentialTemplate(formId, credential, hasData);
+            formContentDetailEl.innerHTML = loadDatastoreTemplate(formId, datastore, hasData);
           break;
         case "elasticsearch":
-            formContentDetailEl.innerHTML = loadDatabaseCredentialTemplate(formId, credential, hasData);
+            formContentDetailEl.innerHTML = loadDatastoreTemplate(formId, datastore, hasData);
           break;
         case "redis":
-            formContentDetailEl.innerHTML = loadDatabaseCredentialTemplate(formId, credential, hasData);
+            formContentDetailEl.innerHTML = loadDatastoreTemplate(formId, datastore, hasData);
           break;
         case "memcached":
-            formContentDetailEl.innerHTML = loadDatabaseCredentialTemplate(formId, credential, hasData);
+            formContentDetailEl.innerHTML = loadDatastoreTemplate(formId, datastore, hasData);
           break;
         case "aws_s3":
-            formContentDetailEl.innerHTML = loadAWSStorageCredentialTemplate(formId, credential, hasData);
+            formContentDetailEl.innerHTML = loadAWSStorageTemplate(formId, datastore, hasData);
           break;
         case "azure_blobs":
-            formContentDetailEl.innerHTML = loadAWSStorageCredentialTemplate(formId, credential, hasData);
+            formContentDetailEl.innerHTML = loadAWSStorageTemplate(formId, datastore, hasData);
           break;
         case "gcp_gcs":
-            formContentDetailEl.innerHTML = loadAWSStorageCredentialTemplate(formId, credential, hasData);
+            formContentDetailEl.innerHTML = loadAWSStorageTemplate(formId, datastore, hasData);
           break;
         default:
             console.log("error")
@@ -257,59 +253,54 @@ loadFormFields = (engineOrStorageProvider, formId, credential, hasData) => {
 
 
 
-const loadCredentialTypeIntoSelectedOption = () => {
+const loadDatastoreTypeIntoSelectedOption = () => {
     let content = "";
-
-    for (let type_ of manageCredentialTypes){
+    for (let type_ of datastoreTypes){
         content += `<option value="${type_._id}">${type_.name}</option>`;
     }
-
     return content;
 }
 
+
 const loadStorageProviderIntoSelectedOption = () => {
     let content = `<option value="0" selected disabled>--please choose--</option>`;
-
     for (let provider of backUpStorageProvider.providers){
         content += `<option value="${provider._id}">${provider.name} (${provider.storage_name})</option>`;
     }
-
     return content;
 }
 
 const loadEngineIntoSelectedOption = () => {
     let content = `<option value="0" selected disabled>--please choose--</option>`;
-
     for (let engine of databaseEngine.engines){
         content += `<option value="${engine._id}">${engine.name}</option>`;
     }
-
     return content;
 }
 
 
-const loadManageCredentialRecord = () => {
+const loadDatastoreRecord = () => {
 
-    // Start spinner
     document.querySelector("#page-spinner").style.display = "none";
+    const url = `${base_url}/datastores`;
 
-    fetch("/credentials", {
+    fetch(url, {
         method: "GET",
-        headers: {"Content-Type": "application/json"}
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${getToken()}`
+        }
     }).then(res => {
-
         if (res.status === 200){
            return res.json();
         }
-
     }).then(jsonData => {
 
         console.log(jsonData)
-        // Get data
-        manageCredentialTypes = jsonData.credential_types;
-        manageCredentials = jsonData.credentials;
+        datastoreTypes = jsonData.datastore_types;
+        datastores = jsonData.datastores;
 
-        for (let type_ of manageCredentialTypes){
+        for (let type_ of datastoreTypes){
 
             if (type_._id === "database_engines"){
                 databaseEngine = type_;
@@ -319,11 +310,9 @@ const loadManageCredentialRecord = () => {
         }
 
 
-        for (let credentialData of manageCredentials){
-
-            displaySavedCredential(credentialCount, credentialData, false);
-
-            credentialCount += 1;
+        for (let datastoreData of datastores){
+            displayDatastore(datastoreCount, datastoreData, false);
+            datastoreCount += 1;
         }
 
 
@@ -335,14 +324,14 @@ const loadManageCredentialRecord = () => {
 }
 
 
-const loadDatabaseCredentialTemplate = (formId, credential, hasData=false) => {
+const loadDatastoreTemplate = (formId, datastore, hasData=false) => {
 
-    const databaseName = hasData == true? credential.database_name : "";
-    const databaseHost = hasData == true? credential.database_host : "";
-    const databaseUser = hasData == true? credential.database_user : "";
-    const databasePassword = hasData == true? credential.database_password : "";
-    const databasePort = hasData == true? credential.database_port : "";
-    const credentialId = hasData == true? credential.credential_id : "";
+    const databaseName = hasData == true? datastore.database_name : "";
+    const databaseHost = hasData == true? datastore.database_host : "";
+    const databaseUser = hasData == true? datastore.database_user : "";
+    const databasePassword = hasData == true? datastore.database_password : "";
+    const databasePort = hasData == true? datastore.database_port : "";
+    const datastoreId = hasData == true? datastore.datastore_id : "";
     const readOnly = hasData == true? "readonly" : "";
 
     return `
@@ -384,23 +373,23 @@ const loadDatabaseCredentialTemplate = (formId, credential, hasData=false) => {
 
 
         <div  class="col-12 other-info">
-            <label for="credential-identifier-${formId}" class="form-label"><strong>Credential Identifier</strong><span style="color: red;">*</span></label>
-            <input type="text" class="form-control" ${readOnly} id="credential-identifier-${formId}"  value="${credentialId}">
-            <p id="credential-identifier-${formId}-error" style="color: red; display: none;">Credential identifier required</p>
+            <label for="datastore-identifier-${formId}" class="form-label"><strong>datastore Identifier</strong><span style="color: red;">*</span></label>
+            <input type="text" class="form-control" ${readOnly} id="datastore-identifier-${formId}"  value="${datastoreId}">
+            <p id="datastore-identifier-${formId}-error" style="color: red; display: none;">datastore identifier required</p>
         </div>
     
     `
 }
 
 
-const loadAWSStorageCredentialTemplate = (formId, credential, hasData=false) => {
+const loadAWSStorageTemplate = (formId, datastore, hasData=false) => {
 
-    const accessKeyId = hasData == true? credential.access_key_id : "";
-    const secretAccessKey = hasData == true? credential.secret_access_key : "";
-    const region = hasData == true? credential.region : "";
-    const bucketName = hasData == true? credential.bucket_name : "";
-    const keyOrDestination = hasData == true? credential.key_or_destination : "";
-    const credentialId = hasData == true? credential.credential_id : "";
+    const accessKeyId = hasData == true? datastore.access_key_id : "";
+    const secretAccessKey = hasData == true? datastore.secret_access_key : "";
+    const region = hasData == true? datastore.region : "";
+    const bucketName = hasData == true? datastore.bucket_name : "";
+    const keyOrDestination = hasData == true? datastore.key_or_destination : "";
+    const datastoreId = hasData == true? datastore.datastore_id : "";
     const readOnly = hasData == true? "readonly" : "";
 
     return `
@@ -441,9 +430,9 @@ const loadAWSStorageCredentialTemplate = (formId, credential, hasData=false) => 
 
 
         <div  class="col-12 other-info">
-            <label for="credential-identifier-${formId}" class="form-label"><strong>Credential Identifier</strong><span style="color: red;">*</span></label>
-            <input type="text" class="form-control" ${readOnly} id="credential-identifier-${formId}"  value="${credentialId}">
-            <p id="credential-identifier-${formId}-error" style="color: red; display: none;">Credential identifier required</p>
+            <label for="datastore-identifier-${formId}" class="form-label"><strong>datastore Identifier</strong><span style="color: red;">*</span></label>
+            <input type="text" class="form-control" ${readOnly} id="datastore-identifier-${formId}"  value="${datastoreId}">
+            <p id="datastore-identifier-${formId}-error" style="color: red; display: none;">datastore identifier required</p>
         </div>
     
     `
@@ -502,34 +491,34 @@ const validateInput = (engineOrStorageProvider, formId) => {
 const validateDatabaseInput = (formId) => {
     let isValid = true;
 
-    let credentialType = "";
+    let datastoreType = "";
     let engineOrStorageProvider = "";
     const databaseName = document.querySelector(`#database-name-${formId}`).value;
     const host = document.querySelector(`#host-${formId}`).value;
     const port = document.querySelector(`#port-${formId}`).value;
     const username = document.querySelector(`#username-${formId}`).value;
     const password = document.querySelector(`#password-${formId}`).value;
-    const credentialId = document.querySelector(`#credential-identifier-${formId}`).value;
-    const credentialTypeEl = document.querySelector(`#type-${formId}`);
+    const datastoreId = document.querySelector(`#datastore-identifier-${formId}`).value;
+    const datastoreTypeEl = document.querySelector(`#type-${formId}`);
     const engineOrStorageProviderEl = document.querySelector(`#engine-or-storage-provider-${formId}`);
 
 
     // form data
-    credentialData = {
+    datastoreData = {
         database_name: databaseName,
         database_host: host,
         database_port: port,
         database_user: username,
         database_password: password,
-        credential_id: credentialId
+        datastore_id: datastoreId
     }
 
 
 
-    if(credentialTypeEl){
-        credentialType = credentialTypeEl.value;
+    if(datastoreTypeEl){
+        datastoreType = datastoreTypeEl.value;
         
-        if (credentialType === ""){
+        if (datastoreType === ""){
             document.getElementById(`type-${formId}-error`).style.display = "block";
             isValid = false;
         }else{
@@ -585,11 +574,11 @@ const validateDatabaseInput = (formId) => {
         document.getElementById(`password-${formId}-error`).style.display = "none";
     }
 
-    if (credentialId === ""){
-        document.getElementById(`credential-identifier-${formId}-error`).style.display = "block";
+    if (datastoreId === ""){
+        document.getElementById(`datastore-identifier-${formId}-error`).style.display = "block";
         isValid = false;
     }else{
-        document.getElementById(`credential-identifier-${formId}-error`).style.display = "none";
+        document.getElementById(`datastore-identifier-${formId}-error`).style.display = "none";
     }
 
     return isValid;
@@ -601,34 +590,34 @@ const validateDatabaseInput = (formId) => {
 const validateAWSStorageInput = (formId) => {
     let isValid = true;
 
-    let credentialType = "";
+    let datastoreType = "";
     let engineOrStorageProvider = "";
     const accessKeyId = document.querySelector(`#access-key-id-${formId}`).value;
     const secretAccessKey = document.querySelector(`#secret-access-key-${formId}`).value;
     const region = document.querySelector(`#region-${formId}`).value;
     const bucketName = document.querySelector(`#bucket-name-${formId}`).value;
     const keyOrDestination = document.querySelector(`#key-or-destination-${formId}`).value;
-    const credentialId = document.querySelector(`#credential-identifier-${formId}`).value;
-    const credentialTypeEl = document.querySelector(`#type-${formId}`);
+    const datastoreId = document.querySelector(`#datastore-identifier-${formId}`).value;
+    const datastoreTypeEl = document.querySelector(`#type-${formId}`);
     const engineOrStorageProviderEl = document.querySelector(`#engine-or-storage-provider-${formId}`);
 
 
     // format data
-    credentialData = {
+    datastoreData = {
         access_key_id: accessKeyId,
         secret_access_key: secretAccessKey,
         region: region,
         bucket_name: bucketName,
         key_or_destination: keyOrDestination,
-        credential_id: credentialId
+        datastore_id: datastoreId
     }
 
 
 
-    if(credentialTypeEl){
-        credentialType = credentialTypeEl.value;
+    if(datastoreTypeEl){
+        datastoreType = datastoreTypeEl.value;
         
-        if (credentialType === ""){
+        if (datastoreType === ""){
             document.getElementById(`type-${formId}-error`).style.display = "block";
             isValid = false;
         }else{
@@ -684,11 +673,11 @@ const validateAWSStorageInput = (formId) => {
         document.getElementById(`key-or-destination-${formId}-error`).style.display = "none";
     }
 
-    if (credentialId === ""){
-        document.getElementById(`credential-identifier-${formId}-error`).style.display = "block";
+    if (datastoreId === ""){
+        document.getElementById(`datastore-identifier-${formId}-error`).style.display = "block";
         isValid = false;
     }else{
-        document.getElementById(`credential-identifier-${formId}-error`).style.display = "none";
+        document.getElementById(`datastore-identifier-${formId}-error`).style.display = "none";
     }
 
 
@@ -713,8 +702,8 @@ const validateGCPStorageInput = () => {
 
 
 
-const saveCredential = (engineOrStorageProvider, methodType, credentialId, formId) => {
-    const btnSaveEl = document.getElementById(`btn-save-credential-${formId}`);
+const savedatastore = (engineOrStorageProvider, methodType, datastoreId, formId) => {
+    const btnSaveEl = document.getElementById(`btn-save-datastore-${formId}`);
 
 
     // Validate form input
@@ -728,18 +717,18 @@ const saveCredential = (engineOrStorageProvider, methodType, credentialId, formI
 
 
         
-        let url = `/credentials/${credentialId}`;
+        let url = `/datastores/${datastoreId}`;
         let data = {};
 
         if (methodType === "POST"){
 
-            url = "/credentials";
+            url = "/datastores";
 
 
-            const credentialType = document.querySelector(`#type-${formId}`).value;
+            const datastoreType = document.querySelector(`#type-${formId}`).value;
             const engineOrStorageProvider = document.querySelector(`#engine-or-storage-provider-${formId}`).value;
             
-            if (credentialType === "database_engines"){
+            if (datastoreType === "database_engines"){
 
                 for (let engine of databaseEngine.engines){
                     if (engineOrStorageProvider === engine._id){
@@ -747,7 +736,7 @@ const saveCredential = (engineOrStorageProvider, methodType, credentialId, formI
                     }    
                 }
 
-            } else if (credentialType === "storage_providers"){
+            } else if (datastoreType === "storage_providers"){
 
                 for (let provider of backUpStorageProvider.providers){
                     if (engineOrStorageProvider === provider._id){
@@ -760,10 +749,10 @@ const saveCredential = (engineOrStorageProvider, methodType, credentialId, formI
             // format data
             data = {
 
-                _id: credentialData.credential_id,
-                type: credentialType,
+                _id: datastoreData.datastore_id,
+                type: datastoreType,
                 engine_or_storage_provider: engineOrStorageProviderData,
-                credential: credentialData
+                datastore: datastoreData
             };
 
 
@@ -771,15 +760,11 @@ const saveCredential = (engineOrStorageProvider, methodType, credentialId, formI
 
             // format data
             data = {
-                credential: credentialData
+                datastore: datastoreData
             };
         }
 
 
-
-
-
-        // Save data
         fetch (url, {
             method: methodType,
             body: JSON.stringify(data),
@@ -794,9 +779,9 @@ const saveCredential = (engineOrStorageProvider, methodType, credentialId, formI
 
             if (jsonData.success){
 
-                displaySavedCredential(formId, jsonData.credential_data, true)
+                displayDatastore(formId, jsonData.datastore_data, true)
                 btnSaveEl.innerHTML = "Save Changes";
-                $.notify("Credential Saved.", "success");
+                $.notify("datastore Saved.", "success");
 
             }else{
 
@@ -822,45 +807,36 @@ const saveCredential = (engineOrStorageProvider, methodType, credentialId, formI
 }
 
 
-const displaySavedCredential = (formId, credential, performReplace=false) => {
+const displayDatastore = (formId, datastore, performReplace=false) => {
 
 
     const divEl = document.createElement("div");
     divEl.setAttribute("class", "col-lg-12");
     divEl.setAttribute("data-form-id", formId);
-    divEl.setAttribute("id", `credential-form-container-${formId}`);
-    divEl.setAttribute("data-engine-or-storage-provider-name", credential.engine_or_storage_provider.name);
+    divEl.setAttribute("id", `datastore-form-container-${formId}`);
+    divEl.setAttribute("data-engine-or-storage-provider-name", datastore.engine_or_storage_provider.name);
 
-    console.log(credential)
+    console.log(datastore)
     divEl.innerHTML = `
 
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">${credential.engine_or_storage_provider.name}</h5>
+                    <h5 class="card-title">${datastore.engine_or_storage_provider.name}</h5>
 
-                    <form id="credential-form-${formId}" style="display: block;" data-form-id="${formId}" class="form" action="#" data-method-type="PUT" data-credential-id="${credential._id}" data-engine-or-storage-provider="${credential.engine_or_storage_provider._id}">
+                    <form id="datastore-form-${formId}" style="display: block;" data-form-id="${formId}" class="form" action="#" data-method-type="PUT" data-datastore-id="${datastore._id}" data-engine-or-storage-provider="${datastore.engine_or_storage_provider._id}">
 
                         <div class="col-12 other-info">
-                            <img height="120" src="/static/img/${credential.engine_or_storage_provider.image}" />
+                            <img height="120" src="/static/img/${datastore.engine_or_storage_provider.image}" />
                         </div>
 
-
-
-
-
                         <div id="form-${formId}-content-detail">  
-
-
-
 
                         
                         </div>
 
-
-
                         <div>
-                            <button style="float: right;" id="btn-save-credential-${formId}" data-form-id="${formId}" data-credential-id="${credential._id}"  type="submit" class="btn btn-primary">Save Changes</button>
-                            <button style="float: right; margin-right: 5px;" type="button" id="btn-delete-credential-${formId}" data-form-id="${formId}" data-credential-id="${credential._id}" data-bs-toggle="modal" data-bs-target="#delete-credential-modal" class="btn btn-danger">Delete</button>
+                            <button style="float: right;" id="btn-save-datastore-${formId}" data-form-id="${formId}" data-datastore-id="${datastore._id}"  type="submit" class="btn btn-primary">Save Changes</button>
+                            <button style="float: right; margin-right: 5px;" type="button" id="btn-delete-datastore-${formId}" data-form-id="${formId}" data-datastore-id="${datastore._id}" data-bs-toggle="modal" data-bs-target="#delete-datastore-modal" class="btn btn-danger">Delete</button>
                         </div>
 
                     </form>
@@ -878,52 +854,52 @@ const displaySavedCredential = (formId, credential, performReplace=false) => {
 
     if (performReplace){
         // get handle to element to replace
-        const oldChild = document.querySelector(`#credential-form-container-${formId}`);
+        const oldChild = document.querySelector(`#datastore-form-container-${formId}`);
         
         // get handle to the parent node
         const parentNode = oldChild.parentNode;
         
         parentNode.replaceChild(divEl, oldChild);
     }else{
-        document.getElementById("credentials-container").appendChild(divEl);    
+        document.getElementById("datastores-container").appendChild(divEl);    
     }
 
 
 
 
-    loadFormFields(credential.engine_or_storage_provider._id, formId, credential.credential, true);
+    loadFormFields(datastore.engine_or_storage_provider._id, formId, datastore.datastore, true);
 
 
 
 
     // Add listener to form
-    document.getElementById(`credential-form-${formId}`).addEventListener("submit", function(event){
+    document.getElementById(`datastore-form-${formId}`).addEventListener("submit", function(event){
         event.preventDefault();
         const engineOrStorageProvider = this.getAttribute("data-engine-or-storage-provider");
         const methodType = this.getAttribute("data-method-type");
-        const credentialId = this.getAttribute("data-credential-id");
+        const datastoreId = this.getAttribute("data-datastore-id");
         const formId = this.getAttribute("data-form-id");
         
-        saveCredential(engineOrStorageProvider, methodType, credentialId, formId);
+        savedatastore(engineOrStorageProvider, methodType, datastoreId, formId);
     });
 
 
 
     // Add listener to delete button
-    document.getElementById(`btn-delete-credential-${formId}`).addEventListener("click", function(event){
+    document.getElementById(`btn-delete-datastore-${formId}`).addEventListener("click", function(event){
 
         const formId = this.getAttribute("data-form-id");
-        const credentialId = this.getAttribute("data-credential-id");
+        const datastoreId = this.getAttribute("data-datastore-id");
     
-        const credentialFormContainer = document.getElementById(`credential-form-container-${formId}`)
-        const engineOrStorageProviderName = credentialFormContainer.getAttribute("data-engine-or-storage-provider-name");
+        const datastoreFormContainer = document.getElementById(`datastore-form-container-${formId}`)
+        const engineOrStorageProviderName = datastoreFormContainer.getAttribute("data-engine-or-storage-provider-name");
 
         
-        const content = `<p>Are you sure, you want to delete the selected ${engineOrStorageProviderName} credentials with ID (${credentialId})</p>`;
+        const content = `<p>Are you sure, you want to delete the selected ${engineOrStorageProviderName} datastores with ID (${datastoreId})</p>`;
         document.getElementById("delete-body-modal").innerHTML=`${content}`;
 
         const deleteBtnEl = document.getElementById("confirm-delete");
-        deleteBtnEl.setAttribute("data-credential-id", credentialId);
+        deleteBtnEl.setAttribute("data-datastore-id", datastoreId);
         deleteBtnEl.setAttribute("data-form-id", formId);
 
     });

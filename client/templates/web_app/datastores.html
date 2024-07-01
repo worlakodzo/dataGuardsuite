@@ -38,7 +38,7 @@
       <div class="col-lg-8">
 
 
-        <div id="credentials-container">
+        <div id="datastore-container">
 
 
           <!--Credential content here-->
@@ -50,7 +50,7 @@
             <div class="card">
               <div class="card-body">
                 <div style="padding-top: 30px;" class="col-6 other-info">
-                  <button type="button" id="btn-add-new-credential" class="btn btn-outline-primary">Add New</button>
+                  <button type="button" id="add-new-datastore" class="btn btn-outline-primary">Add New</button>
                 </div>
               </div>
             </div>
@@ -76,12 +76,12 @@
 
 
     <!--BEGIN delete credential modal-->
-    <div class="modal fade" id="delete-credential-modal" tabindex="-1">
+    <div class="modal fade" id="delete-datastore-modal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Delete</h5>
-            <button type="button" id="delete-credential-modal-close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" id="delete-datastore-modal-close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body" id="delete-body-modal">
             You are sure you want to credential actor (<span id="delete-acctor-name"></span>).
@@ -91,7 +91,7 @@
             <button type="button" id="confirm-delete" class="btn btn-danger">Confirm delete</button>
           </div>
 
-          <p style="color: red;" id="delete-credential-error-notify"></p>
+          <p style="color: red;" id="delete-datastore-error-notify"></p>
         </div>
       </div>
     </div><!--END delete credential modal-->
@@ -111,5 +111,6 @@
 {% endblock %}
 
 {% block js %}
-<script src="{{url_for('static', filename='js/manage-credentials.js')}}"></script>
+<script type="module" src="{{url_for('static', filename='js/datastore.js')}}"></script>
 {% endblock %}
+
