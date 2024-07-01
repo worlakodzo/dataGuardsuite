@@ -1,0 +1,58 @@
+[
+    {
+        "_id": "mysql",
+        "name": "MySQL",
+        "description": "",
+        "type": "relational",
+        "image": "db/mysql-logo.png"
+    },
+    {
+        "_id": "postgresql",
+        "name": "PostgreSQL",
+        "description": "",
+        "type": "relational",
+        "image": "db/postgresql-logo.png"
+    },
+    {
+        "_id": "mariadb",
+        "name": "MariaDB",
+        "description": "",
+        "type": "relational",
+        "image": "db/mariadb-logo.png"
+    },
+    {
+        "_id": "sqlite",
+        "name": "SQLite",
+        "description": "",
+        "type": "relational",
+        "image": "db/sqlite-logo.png"
+    },
+    {
+        "_id": "mongodb",
+        "name": "Mongmemcached-logo.pngoDB",
+        "description": "",
+        "type": "non-relational",
+        "image": "db/mongodb-logo.png"
+    },
+    {
+        "_id": "elasticsearch",
+        "name": "ElasticSearch",
+        "description": "",
+        "type": "non-relational",
+        "image": "db/elasticsearch-logo.png"
+    },
+    {
+        "_id": "redis",
+        "name": "Redis",
+        "description": "",
+        "type": "non-relational",
+        "image": "db/redis-logo.png"
+    },
+    {
+        "_id": "memcached",
+        "name": "Memcached",
+        "description": "",
+        "type": "non-relational",
+        "image": "db/memcached-logo.png"
+    }
+]

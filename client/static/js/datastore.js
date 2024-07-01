@@ -1,3 +1,4 @@
+"use strict";
 import {base_url} from "./variables.js"
 import { getToken } from "./jwt.js"
 
@@ -7,6 +8,7 @@ let databaseEngine = {};
 let backUpStorageProvider = {};
 let datastoreCount = 0;
 let datastoreData = {};
+
 const pageLoading =  `
 <a class="btn btn" type="button" disabled>
 <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>Fetching data...
@@ -155,33 +157,23 @@ document.addEventListener("DOMContentLoaded", function(event){
         // Delete data
         fetch (`/datastores/${datastoreId}`, {
             method: "DELETE",
-            headers: {"Content-Type": "application/json"}
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getToken()}`
+            }
         }).then(res => {
-
-            return res.json();
-
-        }).then(jsonData => {
-
-            console.log(jsonData)
-
-            if (jsonData.success){
-
+            if (res.status === 204){
                 this.innerHTML = "Confirm delete";
-
-                // BEGIN remove datastore card
                 datastoreFormContainer.classList.add("list-fade");
                 datastoreFormContainer.style.opacity = '0';
                 setTimeout(() => datastoreFormContainer.remove(), 1000);
-                // EMD remove datastore card
 
                 confirmDeleteClose.click();
-                $.notify("datastore Deleted.", "success");
-
-            }else{
-
-                // error prompt here
-                this.innerHTML = "Confirm delete";
+                $.notify("Datastore Deleted.", "success");
                 document.getElementById("delete-datastore-error-notify").innerHTML = jsonData.message;
+            }else{
+                
+                document.getElementById("delete-datastore-error-notify").innerHTML = "Something went wrong";
             }
 
         }).catch(err => {
@@ -192,10 +184,6 @@ document.addEventListener("DOMContentLoaded", function(event){
 
         });
 
-
-
-
-
     });
 
 
@@ -205,7 +193,7 @@ document.addEventListener("DOMContentLoaded", function(event){
 });
 
 
-loadFormFields = (engineOrStorageProvider, formId, datastore, hasData) => {
+const loadFormFields = (engineOrStorageProvider, formId, datastore, hasData) => {
     const formContentDetailEl = document.getElementById(`form-${formId}-content-detail`);
     
     switch(engineOrStorageProvider) {
@@ -296,7 +284,6 @@ const loadDatastoreRecord = () => {
         }
     }).then(jsonData => {
 
-        console.log(jsonData)
         datastoreTypes = jsonData.datastore_types;
         datastores = jsonData.datastores;
 

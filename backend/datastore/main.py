@@ -14,7 +14,6 @@ def datastores():
         datastores = Datastore.filter({})
         datastores_dict = []
         for datastore in datastores:
-            # photo_url = f"{request.host_url}{url_for('user_app.profile_photo', filename=user.photo)}"
             datastores_dict.append(datastore.to_dict())
         return jsonify(datastores_dict), 200
 

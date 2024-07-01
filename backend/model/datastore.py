@@ -95,7 +95,7 @@ class Datastore:
 
     def to_dict(self):
         """
-        Convert user instance to dictionary.
+        Convert datastore instance to dictionary.
         """
         data_dict = self.__dict__
         data_dict["created_at"] = self.created_at.isoformat()
