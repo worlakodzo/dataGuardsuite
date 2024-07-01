@@ -1,0 +1,23 @@
+[
+    {
+        "_id": "aws",
+        "name": "Amazon Web Services",
+        "description": "",
+        "type": "cloud",
+        "image": "sp/amazon-web-services-logo.png"
+    },
+    {
+        "_id": "azure",
+        "name": "Microsoft Azure",
+        "description": "",
+        "type": "cloud",
+        "image": "sp/microsoft-azure-logo.png"
+    },
+    {
+        "_id": "gcp",
+        "name": "Google Cloud Platform",
+        "description": "",
+        "type": "cloud",
+        "image": "sp/google-cloud-logo.png"
+    }
+]
