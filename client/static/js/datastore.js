@@ -2,10 +2,11 @@
 import {base_url} from "./variables.js"
 import { getToken } from "./jwt.js"
 
-let datastoreTypes = [];
+let datastoreTypes = {};
+let backupFrequencyTypes = [];
 let datastores = [];
-let databaseEngine = {};
-let backUpStorageProvider = {};
+let databaseEngines = [];
+let backUpStorageProviders = [];
 let datastoreCount = 0;
 let datastoreData = {};
 
@@ -17,7 +18,9 @@ const pageLoading =  `
 const savingData = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Saving...`;
 const deletingData = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Deleting...`;
 
-
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 document.addEventListener("DOMContentLoaded", function(event){
 
@@ -88,10 +91,10 @@ document.addEventListener("DOMContentLoaded", function(event){
             const formContentDetailEl = document.getElementById(`form-${formId}-content-detail`).innerHTML = "";
 
             // Load engine or provider
-            if (datastoreType === "database_engines"){
+            if (datastoreType === "datastore-engine"){
                 document.getElementById(`engine-or-storage-provider-${formId}`).innerHTML = loadEngineIntoSelectedOption();
                 document.getElementById(`engine-or-storage-provider-lb-${formId}`).innerHTML = `<strong>Engine</strong> <span style="color: red;">*</span>`;
-            } else if (datastoreType === "storage_providers"){
+            } else if (datastoreType === "storage-provider"){
                 document.getElementById(`engine-or-storage-provider-${formId}`).innerHTML = loadStorageProviderIntoSelectedOption();
                 document.getElementById(`engine-or-storage-provider-lb-${formId}`).innerHTML = `<strong>Provider</strong> <span style="color: red;">*</span>`;
             }
@@ -153,9 +156,10 @@ document.addEventListener("DOMContentLoaded", function(event){
         const datastoreFormContainer = document.getElementById(`datastore-form-container-${formId}`);
         const confirmDeleteClose = document.getElementById("delete-datastore-modal-close");
         this.innerHTML = deletingData;
+        const url = `${base_url}/datastores/${datastoreId}`;
 
-        // Delete data
-        fetch (`/datastores/${datastoreId}`, {
+
+        fetch (url, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -243,8 +247,8 @@ const loadFormFields = (engineOrStorageProvider, formId, datastore, hasData) => 
 
 const loadDatastoreTypeIntoSelectedOption = () => {
     let content = "";
-    for (let type_ of datastoreTypes){
-        content += `<option value="${type_._id}">${type_.name}</option>`;
+    for (let type_ in datastoreTypes){
+        content += `<option value="${type_}">${datastoreTypes[type_]}</option>`;
     }
     return content;
 }
@@ -252,7 +256,7 @@ const loadDatastoreTypeIntoSelectedOption = () => {
 
 const loadStorageProviderIntoSelectedOption = () => {
     let content = `<option value="0" selected disabled>--please choose--</option>`;
-    for (let provider of backUpStorageProvider.providers){
+    for (let provider of backUpStorageProviders){
         content += `<option value="${provider._id}">${provider.name} (${provider.storage_name})</option>`;
     }
     return content;
@@ -260,7 +264,7 @@ const loadStorageProviderIntoSelectedOption = () => {
 
 const loadEngineIntoSelectedOption = () => {
     let content = `<option value="0" selected disabled>--please choose--</option>`;
-    for (let engine of databaseEngine.engines){
+    for (let engine of databaseEngines){
         content += `<option value="${engine._id}">${engine.name}</option>`;
     }
     return content;
@@ -284,18 +288,21 @@ const loadDatastoreRecord = () => {
         }
     }).then(jsonData => {
 
-        datastoreTypes = jsonData.datastore_types;
+        const datastoreTypes_ = jsonData.datastore_types;
+        backupFrequencyTypes = jsonData.backup_frequency_types;
         datastores = jsonData.datastores;
 
-        for (let type_ of datastoreTypes){
+        for (let datastoreType of datastoreTypes_) {
 
-            if (type_._id === "database_engines"){
-                databaseEngine = type_;
-            }else if (type_._id === "storage_providers"){
-                backUpStorageProvider = type_;
+            datastoreTypes[datastoreType.ds_type] = datastoreType.ds_type.replace("-", " ").split(' ').map(capitalize).join(' ');
+            
+            // Filter datastore engine and storage provider
+            if(datastoreType.ds_type === "datastore-engine"){
+                databaseEngines.push(datastoreType);
+            }else if(datastoreType.ds_type === "storage-provider"){
+                backUpStorageProviders.push(datastoreType);
             }
         }
-
 
         for (let datastoreData of datastores){
             displayDatastore(datastoreCount, datastoreData, false);
@@ -505,10 +512,10 @@ const validateDatabaseInput = (formId) => {
     if(datastoreTypeEl){
         datastoreType = datastoreTypeEl.value;
         
-        if (datastoreType === ""){
+        if (datastoreType === "datastore-engine"){
             document.getElementById(`type-${formId}-error`).style.display = "block";
             isValid = false;
-        }else{
+        }else if(datastoreType === "storage-provider"){
             document.getElementById(`type-${formId}-error`).style.display = "none";
         }
     }
@@ -703,29 +710,24 @@ const savedatastore = (engineOrStorageProvider, methodType, datastoreId, formId)
         let engineOrStorageProviderData = {}
 
 
-        
-        let url = `/datastores/${datastoreId}`;
+        let url = `${base_url}/datastores`;
         let data = {};
-
         if (methodType === "POST"){
-
-            url = "/datastores";
-
 
             const datastoreType = document.querySelector(`#type-${formId}`).value;
             const engineOrStorageProvider = document.querySelector(`#engine-or-storage-provider-${formId}`).value;
             
-            if (datastoreType === "database_engines"){
+            if (datastoreType === "datastore-engine"){
 
-                for (let engine of databaseEngine.engines){
+                for (let engine of databaseEngines){
                     if (engineOrStorageProvider === engine._id){
                         engineOrStorageProviderData = engine;
                     }    
                 }
 
-            } else if (datastoreType === "storage_providers"){
+            } else if (datastoreType === "storage-provider"){
 
-                for (let provider of backUpStorageProvider.providers){
+                for (let provider of backUpStorageProviders){
                     if (engineOrStorageProvider === provider._id){
                         engineOrStorageProviderData = provider;
                     }    
@@ -749,13 +751,17 @@ const savedatastore = (engineOrStorageProvider, methodType, datastoreId, formId)
             data = {
                 datastore: datastoreData
             };
+            url = `${base_url}/datastores/${datastoreId}`;
         }
 
 
         fetch (url, {
             method: methodType,
             body: JSON.stringify(data),
-            headers: {"Content-Type": "application/json"}
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getToken()}`
+            }
         }).then(res => {
 
             return res.json();

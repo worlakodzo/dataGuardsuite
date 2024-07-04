@@ -39,7 +39,7 @@ def load_default_backup_frequency(db):
 
     job_duration_intervals = []
 
-    with open(f"{BASE_DIR}/db/backup-frequency.json", "r") as file:
+    with open(f"{BASE_DIR}/db/backup-frequency-type.json", "r") as file:
         file_contents = file.read()
         job_duration_intervals = json.loads(file_contents)
 
@@ -51,6 +51,5 @@ def load_default_backup_frequency(db):
 
 
 def delete_old_default_data(db):
-    db.datastore_type.delete_many({"ds_type": "datastore-engine"})
-    db.datastore_type.delete_many({"ds_type": "storage-provider"})
+    db.datastore_type.delete_many({})
     db.backup_frequency_type.delete_many({})

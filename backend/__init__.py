@@ -28,7 +28,6 @@ try:
     print("Connected to the database successfully")
 
     # Load default data
-    delete_old_default_data(mongo_db)
     load_default_backup_frequency(mongo_db)
     load_default_storage_providers(mongo_db)
     load_default_datastore_engine(mongo_db)

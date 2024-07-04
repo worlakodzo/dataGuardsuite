@@ -149,8 +149,6 @@ class DatastoreType:
         self.description = description
         self.type = type
         self.image = image
-        self.created_at = datetime.utcnow()
-        self.updated_at = datetime.utcnow()
 
     def save(self):
         """
@@ -197,7 +195,7 @@ class DatastoreType:
 
         objects = []
         for _, document in enumerate(res):
-            new_obj = Datastore()
+            new_obj = DatastoreType()
             for key, value in document.items():
                 setattr(new_obj, key, value)
 
@@ -210,10 +208,7 @@ class DatastoreType:
         """
         Convert datastore instance to dictionary.
         """
-        data_dict = self.__dict__
-        data_dict["created_at"] = self.created_at.isoformat()
-        data_dict["updated_at"] = self.updated_at.isoformat()
-        return data_dict
+        return self.__dict__
 
 
 class BackupFrequencyType:
@@ -239,8 +234,6 @@ class BackupFrequencyType:
         self._id = id
         self.active = True
         self.name = name
-        self.created_at = datetime.utcnow()
-        self.updated_at = datetime.utcnow()
 
     def save(self):
         """
@@ -287,7 +280,7 @@ class BackupFrequencyType:
 
         objects = []
         for _, document in enumerate(res):
-            new_obj = Datastore()
+            new_obj = BackupFrequencyType()
             for key, value in document.items():
                 setattr(new_obj, key, value)
 
@@ -300,7 +293,5 @@ class BackupFrequencyType:
         """
         Convert datastore instance to dictionary.
         """
-        data_dict = self.__dict__
-        data_dict["created_at"] = self.created_at.isoformat()
-        data_dict["updated_at"] = self.updated_at.isoformat()
-        return data_dict
+        return self.__dict__
+
