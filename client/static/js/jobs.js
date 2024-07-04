@@ -1,5 +1,9 @@
+"use strict";
+import {base_url} from "./variables.js"
+import { getToken } from "./jwt.js"
+
 let durationIntervals = [];
-let manageCredentials = [];
+let datastores = [];
 let databaseEngine = {};
 let jobData = {};
 const pageLoading =  `
@@ -122,7 +126,7 @@ const loadBasicInfo = (methodType) => {
 
         // Get data
         durationIntervals = jsonData.duration_interval_types;
-        manageCredentials = jsonData.credentials;
+        datastores = jsonData.credentials;
         console.log(durationIntervals)
 
         // load database credential ID
@@ -136,7 +140,7 @@ const loadBasicInfo = (methodType) => {
 
         // load database credential ID
         optionContent = '<option value="" selected disabled>--please choose--</option>';
-        for (let credentialData of manageCredentials){
+        for (let credentialData of datastores){
             if (credentialData.type === "database_engines"){
                 optionContent += `<option value="${credentialData._id}">${credentialData.engine_or_storage_provider.name} => ${credentialData._id}</option>`;
             }
@@ -149,7 +153,7 @@ const loadBasicInfo = (methodType) => {
         // load backup storage provider credential ID
         optionContent = '<option value="" selected disabled>--please choose--</option>';
         optionContent += `<option value="default">Default</option>`;
-        for (let credentialData of manageCredentials){
+        for (let credentialData of datastores){
             if (credentialData.type === "storage_providers"){
                 optionContent += `<option value="${credentialData._id}">${credentialData.engine_or_storage_provider.name} => ${credentialData._id}</option>`;
             }
@@ -182,14 +186,17 @@ const loadJobRecord = () => {
     jobListContainerEl.style.display = "none";
     const spinnerEl = document.querySelector("#spinner-content");
     spinnerEl.innerHTML = pageLoading;
+    const url = `${base_url}/jobs`;
 
-    fetch("/jobs", {
+    fetch(url, {
         method: "GET",
         headers: {"Content-Type": "application/json"}
     }).then(res => {
 
         if (res.status === 200){
            return res.json();
+        }else if(res.status === 401){
+            window.location.href = "/login";
         }
 
     }).then(jsonData => {
@@ -374,12 +381,12 @@ const saveJob = (methodType, jobId) => {
         errorContainerEl.style.display = "none";
 
         
-        let url = `/jobs/${jobId}`;
+        let url = `${base_url}/jobs/${jobId}`;
         let data = {};
 
         if (methodType === "POST"){
 
-            url = "/jobs";
+            url = `${base_url}/jobs`;
 
             // format data
             data = jobData;

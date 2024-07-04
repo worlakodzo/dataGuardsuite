@@ -16,12 +16,13 @@ class BackupSchedule:
 
     def __int__(
         self,
-        user_id: str,
-        database_id: str,
-        frequency: str,
-        backup_date: datetime,
-        hours: int,
-        minutes: int,
+        user_id: str = None,
+        master_user_id: str = None,
+        datastore_id: str = None,
+        frequency: str = None,
+        backup_date: datetime = None,
+        hours: int = 0,
+        minutes: int = 0,
     ):
         """
         Initializes a new Database instance.
@@ -29,7 +30,8 @@ class BackupSchedule:
 
         self._id = str(uuid.uuid4())
         self.user_id = user_id
-        self.database_id = database_id
+        self.master_user_id = master_user_id
+        self.datastore_id = datastore_id
         self.frequency = frequency
         self.backup_date = backup_date
         self.hours = hours
