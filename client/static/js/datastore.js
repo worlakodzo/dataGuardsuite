@@ -8,7 +8,7 @@ let datastores = [];
 let databaseEngines = [];
 let backUpStorageProviders = [];
 let datastoreCount = 0;
-let datastoreData = {};
+let dsCredentials = {};
 
 const pageLoading =  `
 <a class="btn btn" type="button" disabled>
@@ -174,7 +174,6 @@ document.addEventListener("DOMContentLoaded", function(event){
 
                 confirmDeleteClose.click();
                 $.notify("Datastore Deleted.", "success");
-                document.getElementById("delete-datastore-error-notify").innerHTML = jsonData.message;
             }else{
                 
                 document.getElementById("delete-datastore-error-notify").innerHTML = "Something went wrong";
@@ -304,8 +303,8 @@ const loadDatastoreRecord = () => {
             }
         }
 
-        for (let datastoreData of datastores){
-            displayDatastore(datastoreCount, datastoreData, false);
+        for (let datastore of datastores){
+            displayDatastore(datastoreCount, datastore, false);
             datastoreCount += 1;
         }
 
@@ -320,12 +319,12 @@ const loadDatastoreRecord = () => {
 
 const loadDatastoreTemplate = (formId, datastore, hasData=false) => {
 
-    const databaseName = hasData == true? datastore.database_name : "";
-    const databaseHost = hasData == true? datastore.database_host : "";
-    const databaseUser = hasData == true? datastore.database_user : "";
-    const databasePassword = hasData == true? datastore.database_password : "";
-    const databasePort = hasData == true? datastore.database_port : "";
-    const datastoreId = hasData == true? datastore.datastore_id : "";
+    const databaseName = hasData == true? datastore.ds_credential.database_name : "";
+    const databaseHost = hasData == true? datastore.ds_credential.database_host : "";
+    const databaseUser = hasData == true? datastore.ds_credential.database_user : "";
+    const databasePassword = hasData == true? datastore.ds_credential.database_password : "";
+    const databasePort = hasData == true? datastore.ds_credential.database_port : "";
+    const datastoreId = hasData == true? datastore.ds_credential.datastore_identifier : "";
     const readOnly = hasData == true? "readonly" : "";
 
     return `
@@ -378,12 +377,12 @@ const loadDatastoreTemplate = (formId, datastore, hasData=false) => {
 
 const loadAWSStorageTemplate = (formId, datastore, hasData=false) => {
 
-    const accessKeyId = hasData == true? datastore.access_key_id : "";
-    const secretAccessKey = hasData == true? datastore.secret_access_key : "";
-    const region = hasData == true? datastore.region : "";
-    const bucketName = hasData == true? datastore.bucket_name : "";
-    const keyOrDestination = hasData == true? datastore.key_or_destination : "";
-    const datastoreId = hasData == true? datastore.datastore_id : "";
+    const accessKeyId = hasData == true? datastore.ds_credential.access_key_id : "";
+    const secretAccessKey = hasData == true? datastore.ds_credential.secret_access_key : "";
+    const region = hasData == true? datastore.ds_credential.region : "";
+    const bucketName = hasData == true? datastore.ds_credential.bucket_name : "";
+    const keyOrDestination = hasData == true? datastore.ds_credential.key_or_destination : "";
+    const datastoreId = hasData == true? datastore.ds_credential.datastore_identifier : "";
     const readOnly = hasData == true? "readonly" : "";
 
     return `
@@ -492,19 +491,19 @@ const validateDatabaseInput = (formId) => {
     const port = document.querySelector(`#port-${formId}`).value;
     const username = document.querySelector(`#username-${formId}`).value;
     const password = document.querySelector(`#password-${formId}`).value;
-    const datastoreId = document.querySelector(`#datastore-identifier-${formId}`).value;
+    const datastoreIdentifier = document.querySelector(`#datastore-identifier-${formId}`).value;
     const datastoreTypeEl = document.querySelector(`#type-${formId}`);
     const engineOrStorageProviderEl = document.querySelector(`#engine-or-storage-provider-${formId}`);
 
 
     // form data
-    datastoreData = {
+    dsCredentials = {
         database_name: databaseName,
         database_host: host,
         database_port: port,
         database_user: username,
         database_password: password,
-        datastore_id: datastoreId
+        datastore_identifier: datastoreIdentifier
     }
 
 
@@ -512,10 +511,10 @@ const validateDatabaseInput = (formId) => {
     if(datastoreTypeEl){
         datastoreType = datastoreTypeEl.value;
         
-        if (datastoreType === "datastore-engine"){
+        if (datastoreType === ""){
             document.getElementById(`type-${formId}-error`).style.display = "block";
             isValid = false;
-        }else if(datastoreType === "storage-provider"){
+        }else {
             document.getElementById(`type-${formId}-error`).style.display = "none";
         }
     }
@@ -568,7 +567,7 @@ const validateDatabaseInput = (formId) => {
         document.getElementById(`password-${formId}-error`).style.display = "none";
     }
 
-    if (datastoreId === ""){
+    if (datastoreIdentifier === ""){
         document.getElementById(`datastore-identifier-${formId}-error`).style.display = "block";
         isValid = false;
     }else{
@@ -591,19 +590,19 @@ const validateAWSStorageInput = (formId) => {
     const region = document.querySelector(`#region-${formId}`).value;
     const bucketName = document.querySelector(`#bucket-name-${formId}`).value;
     const keyOrDestination = document.querySelector(`#key-or-destination-${formId}`).value;
-    const datastoreId = document.querySelector(`#datastore-identifier-${formId}`).value;
+    const datastoreIdentifier = document.querySelector(`#datastore-identifier-${formId}`).value;
     const datastoreTypeEl = document.querySelector(`#type-${formId}`);
     const engineOrStorageProviderEl = document.querySelector(`#engine-or-storage-provider-${formId}`);
 
 
     // format data
-    datastoreData = {
+    dsCredentials = {
         access_key_id: accessKeyId,
         secret_access_key: secretAccessKey,
         region: region,
         bucket_name: bucketName,
         key_or_destination: keyOrDestination,
-        datastore_id: datastoreId
+        datastore_identifier: datastoreIdentifier
     }
 
 
@@ -667,7 +666,7 @@ const validateAWSStorageInput = (formId) => {
         document.getElementById(`key-or-destination-${formId}-error`).style.display = "none";
     }
 
-    if (datastoreId === ""){
+    if (datastoreIdentifier === ""){
         document.getElementById(`datastore-identifier-${formId}-error`).style.display = "block";
         isValid = false;
     }else{
@@ -699,7 +698,6 @@ const validateGCPStorageInput = () => {
 const savedatastore = (engineOrStorageProvider, methodType, datastoreId, formId) => {
     const btnSaveEl = document.getElementById(`btn-save-datastore-${formId}`);
 
-
     // Validate form input
     if (validateInput(engineOrStorageProvider, formId)){
 
@@ -707,7 +705,7 @@ const savedatastore = (engineOrStorageProvider, methodType, datastoreId, formId)
         const errorContainerEl = document.querySelector(`#error-container-${formId}`);
         const errorEl = document.querySelector(`#error-p-${formId}`);
         errorContainerEl.style.display = "none";
-        let engineOrStorageProviderData = {}
+        let dsDetails = {}
 
 
         let url = `${base_url}/datastores`;
@@ -715,21 +713,21 @@ const savedatastore = (engineOrStorageProvider, methodType, datastoreId, formId)
         if (methodType === "POST"){
 
             const datastoreType = document.querySelector(`#type-${formId}`).value;
-            const engineOrStorageProvider = document.querySelector(`#engine-or-storage-provider-${formId}`).value;
+            const selectedDatastore = document.querySelector(`#engine-or-storage-provider-${formId}`).value;
             
             if (datastoreType === "datastore-engine"){
 
                 for (let engine of databaseEngines){
-                    if (engineOrStorageProvider === engine._id){
-                        engineOrStorageProviderData = engine;
+                    if (selectedDatastore === engine._id){
+                        dsDetails = engine;
                     }    
                 }
 
             } else if (datastoreType === "storage-provider"){
 
                 for (let provider of backUpStorageProviders){
-                    if (engineOrStorageProvider === provider._id){
-                        engineOrStorageProviderData = provider;
+                    if (selectedDatastore === provider._id){
+                        dsDetails = provider;
                     }    
                 }
 
@@ -737,11 +735,10 @@ const savedatastore = (engineOrStorageProvider, methodType, datastoreId, formId)
 
             // format data
             data = {
-
-                _id: datastoreData.datastore_id,
-                type: datastoreType,
-                engine_or_storage_provider: engineOrStorageProviderData,
-                datastore: datastoreData
+                _id: dsCredentials.datastore_identifier,
+                ds_details: dsDetails,
+                ds_credential: dsCredentials,
+                tags: [],
             };
 
 
@@ -749,7 +746,8 @@ const savedatastore = (engineOrStorageProvider, methodType, datastoreId, formId)
 
             // format data
             data = {
-                datastore: datastoreData
+                ds_credential: dsCredentials,
+                tags: [],
             };
             url = `${base_url}/datastores/${datastoreId}`;
         }
@@ -763,26 +761,19 @@ const savedatastore = (engineOrStorageProvider, methodType, datastoreId, formId)
                 "Authorization": `Bearer ${getToken()}`
             }
         }).then(res => {
-
-            return res.json();
-
-        }).then(jsonData => {
-
-            console.log(jsonData)
-
-            if (jsonData.success){
-
-                displayDatastore(formId, jsonData.datastore_data, true)
-                btnSaveEl.innerHTML = "Save Changes";
-                $.notify("datastore Saved.", "success");
-
+            if (res.status === 201 || res.status === 200){
+                return res.json();
             }else{
-
                 // error prompt here
-                errorEl.innerHTML = jsonData.message
+                errorEl.innerHTML = "Something went wrong, please try again."
                 errorContainerEl.style.display = "block";
                 btnSaveEl.innerHTML = "Save Changes";
             }
+
+        }).then(jsonData => {
+            displayDatastore(formId, jsonData.datastore, true)
+            btnSaveEl.innerHTML = "Save Changes";
+            $.notify("Datastore Saved.", "success");
 
         }).catch(err => {
             
@@ -807,19 +798,18 @@ const displayDatastore = (formId, datastore, performReplace=false) => {
     divEl.setAttribute("class", "col-lg-12");
     divEl.setAttribute("data-form-id", formId);
     divEl.setAttribute("id", `datastore-form-container-${formId}`);
-    divEl.setAttribute("data-engine-or-storage-provider-name", datastore.engine_or_storage_provider.name);
+    divEl.setAttribute("data-engine-or-storage-provider-name", datastore.ds_details.name);
 
-    console.log(datastore)
     divEl.innerHTML = `
 
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">${datastore.engine_or_storage_provider.name}</h5>
+                    <h5 class="card-title">${datastore.ds_details.name}</h5>
 
-                    <form id="datastore-form-${formId}" style="display: block;" data-form-id="${formId}" class="form" action="#" data-method-type="PUT" data-datastore-id="${datastore._id}" data-engine-or-storage-provider="${datastore.engine_or_storage_provider._id}">
+                    <form id="datastore-form-${formId}" style="display: block;" data-form-id="${formId}" class="form" action="#" data-method-type="PUT" data-datastore-id="${datastore._id}" data-engine-or-storage-provider="${datastore.ds_details._id}">
 
                         <div class="col-12 other-info">
-                            <img height="120" src="/static/img/${datastore.engine_or_storage_provider.image}" />
+                            <img height="120" src="/static/img/${datastore.ds_details.image}" />
                         </div>
 
                         <div id="form-${formId}-content-detail">  
@@ -860,7 +850,7 @@ const displayDatastore = (formId, datastore, performReplace=false) => {
 
 
 
-    loadFormFields(datastore.engine_or_storage_provider._id, formId, datastore.datastore, true);
+    loadFormFields(datastore.ds_details._id, formId, datastore, true);
 
 
 
