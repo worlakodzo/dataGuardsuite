@@ -66,6 +66,8 @@ const loadUsers = () => {
         if (res.status === 200){
             // Convert data to json
             return res.json();
+        }else if(res.status === 401){
+            window.location.href = "/login";
         }else{
 
         }
@@ -168,6 +170,9 @@ const saveUserData = (event) => {
                 $.notify("User Saved.", "success");
                 btnCreateUserEl.innerHTML = "Create User";
                 window.location.href = "/users";
+
+            }else if(res.status === 401){
+                window.location.href = "/login";
             }else{
 
                 document.querySelector("#save-error-content").innerHTML = "Failed to create user";
@@ -260,6 +265,8 @@ const getUserProfile =  () => {
     }).then(res => {
         if (res.status === 200){
             return res.json();
+        }else if(res.status === 401){
+            window.location.href = "/login";
         }else{
 
         }
@@ -424,7 +431,10 @@ const updateUserData = (event) => {
         fetch(url, {
 
             method: "PUT",
-            headers: {"Content-Type": "application/json"},
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getToken()}`
+            },
             body: JSON.stringify(data)
 
         }).then(res => {
@@ -489,7 +499,10 @@ const changePassword = (event) => {
         btnSaveChanagesEl.innerHTML = savingData;
         fetch(url, {
             method: "PATCH",
-            headers: {"Content-Type": "application/json"},
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getToken()}`
+            },
             body: JSON.stringify({password: newPassword})
         }).then(res => {
             if (res.status === 200){
@@ -518,7 +531,10 @@ const updateUserSetting = (event) => {
     fetch(url, {
 
         method: "PUT",
-        headers: {"Content-Type": "application/json"},
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${getToken()}`
+        },
         body: JSON.stringify({
             email_notification: {
                 changes_to_user_info: document.getElementById("changes-to-user-info").checked,
@@ -531,6 +547,8 @@ const updateUserSetting = (event) => {
     }).then(res => {
         if (res.status === 200){
             $.notify("Setting Saved.", "success");
+        }else if(res.status === 401){
+            window.location.href = "/login";
         }
         btnSaveChanagesEl.innerHTML = "Save Changes";
 
@@ -568,7 +586,10 @@ const deleteUser = (event) => {
 
     fetch(url, {
         method: "DELETE",
-        headers: {"Content-Type": "application/json"},
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${getToken()}`
+        },
     }).then(res => {
 
         if (res.status === 204){
@@ -578,6 +599,8 @@ const deleteUser = (event) => {
             userRowEl.style.opacity = '0';
             $.notify("User deleted.", "success");
 
+        }else if(res.status === 401){
+            window.location.href = "/login";
         }else{
             return res.json();
         }

@@ -19,7 +19,7 @@ class Datastore:
         master_user_id: str = None,
         ds_details: dict = {},
         ds_credential: dict = {},
-        tags: list = []
+        tags: list = [],
     ):
         """
         Initializes a new Database instance.

@@ -1,5 +1,9 @@
+"use strict";
+import {base_url} from "./variables.js"
+import { getToken } from "./jwt.js"
+
 let durationIntervals = [];
-let manageCredentials = [];
+let datastores = [];
 let databaseEngine = {};
 let jobData = {};
 const pageLoading =  `
@@ -106,13 +110,19 @@ const loadBasicInfo = (methodType) => {
     document.querySelector("#page-spinner").style.display = "block";
     document.querySelector("#job-form").style.display = "none";
 
-    fetch("/jobbasicinfo", {
+    const url = `${base_url}/generalinfo`;
+    fetch(url, {
         method: "GET",
-        headers: {"Content-Type": "application/json"}
+        headers: {
+            "Content-Type": "application/json",
+             "Authorization": `Bearer ${getToken()}`
+            }
     }).then(res => {
 
         if (res.status === 200){
            return res.json();
+        }else if(res.status === 401){
+            window.location.href = "/login";
         }
 
     }).then(jsonData => {
@@ -121,8 +131,8 @@ const loadBasicInfo = (methodType) => {
         let optionContent = "";
 
         // Get data
-        durationIntervals = jsonData.duration_interval_types;
-        manageCredentials = jsonData.credentials;
+        durationIntervals = jsonData.backup_frequency_types;
+        datastores = jsonData.datastores;
         console.log(durationIntervals)
 
         // load database credential ID
@@ -134,27 +144,18 @@ const loadBasicInfo = (methodType) => {
         
 
 
-        // load database credential ID
-        optionContent = '<option value="" selected disabled>--please choose--</option>';
-        for (let credentialData of manageCredentials){
-            if (credentialData.type === "database_engines"){
-                optionContent += `<option value="${credentialData._id}">${credentialData.engine_or_storage_provider.name} => ${credentialData._id}</option>`;
+        // load database engine and storage provider
+        optionContentDatabaseEngine = '<option value="" selected disabled>--please choose--</option>';
+        optionContentStorageProvider = '<option value="" selected disabled>--please choose--</option>';
+        for (let datastore of datastores){
+            if (datastore.ds_details.ds_type === "datastore-engine"){
+                optionContentDatabaseEngine += `<option value="${datastore._id}">${datastore.ds_details.name} => ${datastore._id}</option>`;
+            }else if (datastore.ds_details.ds_type === "storage-provider"){
+                optionContentStorageProvider += `<option value="${datastore._id}">${datastore.ds_details.name} => ${datastore._id}</option>`;
             }
         }
-        document.getElementById("database-credential-id").innerHTML = optionContent
-
-
-
-
-        // load backup storage provider credential ID
-        optionContent = '<option value="" selected disabled>--please choose--</option>';
-        optionContent += `<option value="default">Default</option>`;
-        for (let credentialData of manageCredentials){
-            if (credentialData.type === "storage_providers"){
-                optionContent += `<option value="${credentialData._id}">${credentialData.engine_or_storage_provider.name} => ${credentialData._id}</option>`;
-            }
-        }
-        document.getElementById("backup-storage-provider-credential-id").innerHTML = optionContent
+        document.getElementById("database-credential-id").innerHTML = optionContentDatabaseEngine;
+        document.getElementById("backup-storage-provider-credential-id").innerHTML = optionContentStorageProvider;
 
 
         // Update  
@@ -182,14 +183,20 @@ const loadJobRecord = () => {
     jobListContainerEl.style.display = "none";
     const spinnerEl = document.querySelector("#spinner-content");
     spinnerEl.innerHTML = pageLoading;
+    const url = `${base_url}/jobs`;
 
-    fetch("/jobs", {
+    fetch(url, {
         method: "GET",
-        headers: {"Content-Type": "application/json"}
+        headers: {
+            "Content-Type": "application/json",
+             "Authorization": `Bearer ${getToken()}`
+            }
     }).then(res => {
 
         if (res.status === 200){
            return res.json();
+        }else if(res.status === 401){
+            window.location.href = "/login";
         }
 
     }).then(jsonData => {
@@ -374,12 +381,12 @@ const saveJob = (methodType, jobId) => {
         errorContainerEl.style.display = "none";
 
         
-        let url = `/jobs/${jobId}`;
+        let url = `${base_url}/jobs/${jobId}`;
         let data = {};
 
         if (methodType === "POST"){
 
-            url = "/jobs";
+            url = `${base_url}/jobs`;
 
             // format data
             data = jobData;
@@ -396,7 +403,10 @@ const saveJob = (methodType, jobId) => {
         fetch (url, {
             method: methodType,
             body: JSON.stringify(data),
-            headers: {"Content-Type": "application/json"}
+            headers: {
+                "Content-Type": "application/json",
+                 "Authorization": `Bearer ${getToken()}`
+                }
         }).then(res => {
 
             return res.json();

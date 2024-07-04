@@ -87,7 +87,7 @@ def login():
             access_token = create_access_token(
                 identity={
                     "user_id": user._id,
-                    "master_user_id": user._id,
+                    "master_user_id": user.master_user_id,
                     "username": user.username,
                     "email": user.email,
                     "photo_url": f"{request.host_url}{url_for('user_app.profile_photo', filename=user.photo)}",
@@ -156,6 +156,7 @@ def password_reset():
 @user_app.route("/", methods=["GET", "POST"], strict_slashes=False)
 @jwt_required()
 def users():
+    identity = get_jwt_identity()
     if request.method == "GET":
         users = User.filter({})
         users_dict = []
@@ -166,6 +167,7 @@ def users():
 
     elif request.method == "POST":
         data = request.get_json()
+        data["master_user_id"] = identity["master_user_id"]
         new_user = User(**data)
         res = new_user.save()
         return (
