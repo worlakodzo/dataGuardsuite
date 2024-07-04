@@ -1,10 +1,8 @@
 from flask import Blueprint, jsonify, request, url_for, abort
 from flask_jwt_extended import jwt_required
-from ..model.datastore import Datastore
+from ..model.datastore import Datastore, DatastoreType, BackupFrequencyType
 
-datastore_app = Blueprint(
-    "datastore_app", __name__, url_prefix="/datastores"
-)
+datastore_app = Blueprint("datastore_app", __name__, url_prefix="/datastores")
 
 
 @jwt_required()
@@ -15,20 +13,43 @@ def datastores():
         datastores_dict = []
         for datastore in datastores:
             datastores_dict.append(datastore.to_dict())
-        return jsonify(datastores_dict), 200
+
+        datastore_types = DatastoreType.filter({})
+        datastore_types_dict = [d_type.to_dict() for d_type in datastore_types]
+        backup_frequency_types = BackupFrequencyType.filter({})
+        backup_frequency_types_dict = [b_type.to_dict() for b_type in backup_frequency_types]
+
+        return (
+            jsonify(
+                {
+                    "datastores": datastores_dict,
+                    "datastore_types": datastore_types_dict,
+                    "backup_frequency_types": backup_frequency_types_dict,
+                }
+            ),
+            200,
+        )
 
     elif request.method == "POST":
         data = request.get_json()
         new_datastore = Datastore(**data)
         res = new_datastore.save()
         return (
-            jsonify({"msg": "Datastore created successfully", "datastore_id": res.inserted_id}),
+            jsonify(
+                {
+                    "msg": "Datastore created successfully",
+                    "datastore_id": res.inserted_id,
+                }
+            ),
             201,
         )
-    
+
+
 @jwt_required()
 @datastore_app.route(
-    "/<string:datastore_id>", methods=["GET", "PUT", "DELETE", "PATCH"], strict_slashes=False
+    "/<string:datastore_id>",
+    methods=["GET", "PUT", "DELETE", "PATCH"],
+    strict_slashes=False,
 )
 def datastore_details(datastore_id):
     try:

@@ -1,0 +1,28 @@
+[
+   {
+        "_id": "minutely",
+        "active": true,
+        "name": "Minutely"
+    },
+    {
+        "_id": "hourly",
+        "active": true,
+        "name": "Hourly"
+    },
+    {
+        "_id": "daily",
+        "active": true,
+        "name": "Daily"
+    },
+    {
+        "_id": "weekly",
+        "active": true,
+        "name": "Weekly"
+    },
+    {
+        "_id": "monthly",
+        "active": true,
+        "name": "Monthly"
+    }
+
+]
