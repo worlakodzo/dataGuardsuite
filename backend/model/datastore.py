@@ -12,37 +12,31 @@ class Datastore:
 
     __collection_name = "datastore"
 
-    @classmethod
-    def collection_name(cls):
-        return cls.__collection_name
-
-    def __int__(
+    def __init__(
         self,
+        _id: str = None,
         user_id: str = None,
-        datastore_type: dict = {},
+        master_user_id: str = None,
+        ds_details: dict = {},
         ds_credential: dict = {},
-        storage_provider: dict = {},
-        storage_credential: dict = {},
-        tags: list = [],
+        tags: list = []
     ):
         """
         Initializes a new Database instance.
         """
 
-        self._id = str(uuid.uuid4())
+        self._id = _id
         self.user_id = user_id
-        self.ds_type = datastore_type
+        self.master_user_id = master_user_id
+        self.ds_details = ds_details
         self.ds_credential = ds_credential
-        self.storage_provider = storage_provider
-        self.storage_credential = storage_credential
         self.tags = tags
-        # self.host = host
-        # self.port = port
-        # self.username = username
-        # self.password = password
-        # self.database_name = database_name
         self.created_at = datetime.utcnow()
         self.updated_at = datetime.utcnow()
+
+    @classmethod
+    def collection_name(cls):
+        return cls.__collection_name
 
     def save(self):
         """
@@ -55,17 +49,11 @@ class Datastore:
             # Insert a new document
             new_value = self.__dict__.copy()
             new_value["ds_credential"] = encrypt(json.dumps(new_value["ds_credential"]))
-            new_value["storage_credential"] = encrypt(
-                json.dumps(new_value["storage_credential"])
-            )
             res = mongo_db.datastore.insert_one(new_value)
         else:
             # Update existing document
             new_value = self.__dict__.copy()
             new_value["ds_credential"] = encrypt(json.dumps(new_value["ds_credential"]))
-            new_value["storage_credential"] = encrypt(
-                json.dumps(new_value["storage_credential"])
-            )
             del new_value["_id"]
             del new_value["update_document"]
             res = mongo_db.datastore.update_one({"_id": self._id}, {"$set": new_value})
@@ -102,8 +90,7 @@ class Datastore:
                 setattr(new_obj, key, value)
 
             setattr(new_obj, "update_document", True)
-            new_obj.ds_credential = decrypt(new_obj.ds_credential)
-            new_obj.storage_credential = decrypt(new_obj.storage_credential)
+            new_obj.ds_credential = json.loads(decrypt(new_obj.ds_credential))
             objects.append(new_obj)
 
         return objects
@@ -129,7 +116,7 @@ class DatastoreType:
     def collection_name(cls):
         return cls.__collection_name
 
-    def __int__(
+    def __init__(
         self,
         id: str = None,
         ds_type: str = None,
@@ -166,7 +153,9 @@ class DatastoreType:
             new_value = self.__dict__.copy()
             del new_value["_id"]
             del new_value["update_document"]
-            res = mongo_db.datastore_type.update_one({"_id": self._id}, {"$set": new_value})
+            res = mongo_db.datastore_type.update_one(
+                {"_id": self._id}, {"$set": new_value}
+            )
         return res
 
     def update(self, data):
@@ -222,11 +211,7 @@ class BackupFrequencyType:
     def collection_name(cls):
         return cls.__collection_name
 
-    def __int__(
-        self,
-        id: str = None,
-        name: str = None
-    ):
+    def __init__(self, id: str = None, name: str = None):
         """
         Initializes a new BackupFrequencyType instance.
         """
@@ -251,7 +236,9 @@ class BackupFrequencyType:
             new_value = self.__dict__.copy()
             del new_value["_id"]
             del new_value["update_document"]
-            res = mongo_db.backup_frequency_type.update_one({"_id": self._id}, {"$set": new_value})
+            res = mongo_db.backup_frequency_type.update_one(
+                {"_id": self._id}, {"$set": new_value}
+            )
         return res
 
     def update(self, data):
@@ -294,4 +281,3 @@ class BackupFrequencyType:
         Convert datastore instance to dictionary.
         """
         return self.__dict__
-

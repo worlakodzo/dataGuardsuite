@@ -87,6 +87,7 @@ def login():
             access_token = create_access_token(
                 identity={
                     "user_id": user._id,
+                    "master_user_id": user._id,
                     "username": user.username,
                     "email": user.email,
                     "photo_url": f"{request.host_url}{url_for('user_app.profile_photo', filename=user.photo)}",
@@ -152,8 +153,8 @@ def password_reset():
         abort(500)
 
 
-@jwt_required()
 @user_app.route("/", methods=["GET", "POST"], strict_slashes=False)
+@jwt_required()
 def users():
     if request.method == "GET":
         users = User.filter({})
@@ -173,10 +174,10 @@ def users():
         )
 
 
-@jwt_required()
 @user_app.route(
     "/<string:user_id>", methods=["GET", "PUT", "DELETE", "PATCH"], strict_slashes=False
 )
+@jwt_required()
 def user_details(user_id):
     try:
         try:
