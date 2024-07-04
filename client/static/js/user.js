@@ -66,6 +66,8 @@ const loadUsers = () => {
         if (res.status === 200){
             // Convert data to json
             return res.json();
+        }else if(res.status === 401){
+            window.location.href = "/login";
         }else{
 
         }

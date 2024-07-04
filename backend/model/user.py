@@ -18,12 +18,13 @@ class User:
     def collection_name(cls):
         return cls.__collection_name
 
-    def __init__(self, username: str, email: str, password: str, phone: str = ""):
+    def __init__(self, username: str, email: str, password: str, phone: str = "", master_user_id: str = ""):
         """
         Initializes a new User instance.
         """
 
         self._id = str(uuid.uuid4())
+        self.master_user_id = master_user_id if master_user_id else self._id
         self.username = username
         self.email = email
         self.password_hash = self.get_hashed_password(password)

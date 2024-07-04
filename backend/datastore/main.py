@@ -10,7 +10,7 @@ datastore_app = Blueprint("datastore_app", __name__, url_prefix="/datastores")
 def datastores():
     identity = get_jwt_identity()
     if request.method == "GET":
-        datastores = Datastore.filter({})
+        datastores = Datastore.filter({"master_user_id": identity["master_user_id"]})
         datastores_dict = []
         for datastore in datastores:
             datastores_dict.append(datastore.to_dict())
@@ -53,7 +53,7 @@ def datastores():
 
 @datastore_app.route(
     "/<string:datastore_id>",
-    methods=["GET", "PUT", "DELETE", "PATCH"],
+    methods=["GET", "PUT", "DELETE"],
     strict_slashes=False,
 )
 @jwt_required()
@@ -84,11 +84,6 @@ def datastore_details(datastore_id):
         elif request.method == "DELETE":
             datastore.delete()
             return jsonify({"msg": "Datastore deleted successfully"}), 204
-
-        elif request.method == "PATCH":
-            data = request.get_json()
-            datastore.change_password(data)
-            return jsonify(datastore.to_dict()), 200
 
     except Exception as err:
         print(str(err))
