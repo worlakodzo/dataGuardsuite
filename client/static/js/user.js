@@ -429,7 +429,10 @@ const updateUserData = (event) => {
         fetch(url, {
 
             method: "PUT",
-            headers: {"Content-Type": "application/json"},
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getToken()}`
+            },
             body: JSON.stringify(data)
 
         }).then(res => {
@@ -494,7 +497,10 @@ const changePassword = (event) => {
         btnSaveChanagesEl.innerHTML = savingData;
         fetch(url, {
             method: "PATCH",
-            headers: {"Content-Type": "application/json"},
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getToken()}`
+            },
             body: JSON.stringify({password: newPassword})
         }).then(res => {
             if (res.status === 200){
@@ -523,7 +529,10 @@ const updateUserSetting = (event) => {
     fetch(url, {
 
         method: "PUT",
-        headers: {"Content-Type": "application/json"},
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${getToken()}`
+        },
         body: JSON.stringify({
             email_notification: {
                 changes_to_user_info: document.getElementById("changes-to-user-info").checked,
@@ -575,7 +584,10 @@ const deleteUser = (event) => {
 
     fetch(url, {
         method: "DELETE",
-        headers: {"Content-Type": "application/json"},
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${getToken()}`
+        },
     }).then(res => {
 
         if (res.status === 204){
