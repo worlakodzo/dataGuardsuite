@@ -18,7 +18,7 @@ def jobs():
             jobs_dict.append(job.to_dict())
 
         return jsonify({"jobs": jobs_dict}), 200
-    
+
     elif request.method == "POST":
         data = request.get_json()
         data["user_id"] = identity["user_id"]
@@ -90,7 +90,6 @@ def general_info():
         datastores_dict = []
         for datastore in datastores:
             datastores_dict.append(datastore.to_dict())
-
 
         backup_frequency_types = BackupFrequencyType.filter({})
         backup_frequency_types_dict = [

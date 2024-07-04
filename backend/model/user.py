@@ -18,7 +18,14 @@ class User:
     def collection_name(cls):
         return cls.__collection_name
 
-    def __init__(self, username: str, email: str, password: str, phone: str = "", master_user_id: str = ""):
+    def __init__(
+        self,
+        username: str,
+        email: str,
+        password: str,
+        phone: str = "",
+        master_user_id: str = "",
+    ):
         """
         Initializes a new User instance.
         """

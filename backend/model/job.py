@@ -56,7 +56,9 @@ class BackupSchedule:
             new_value = self.__dict__.copy()
             del new_value["_id"]
             del new_value["update_document"]
-            res = mongo_db.backup_schedule.update_one({"_id": self._id}, {"$set": new_value})
+            res = mongo_db.backup_schedule.update_one(
+                {"_id": self._id}, {"$set": new_value}
+            )
         return res
 
     def get_timestamp(self) -> datetime:

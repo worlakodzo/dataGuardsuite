@@ -23,7 +23,9 @@ from .backup_management.main import backup_management_app
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY")
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)  # Set expiration time to 1 hour
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(
+    hours=1
+)  # Set expiration time to 1 hour
 app.config["MAIL_SERVER"] = os.environ.get("MAIL_SERVER")
 app.config["MAIL_PORT"] = int(os.environ.get("MAIL_PORT"))
 app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME")
