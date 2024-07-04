@@ -3,6 +3,7 @@ from flask import jsonify
 from dotenv import find_dotenv, load_dotenv
 from .storage.constant import UPLOAD_FOLDER
 
+
 # Load enviroment variable
 load_dotenv(find_dotenv())
 
@@ -43,4 +44,5 @@ def health():
 
 
 if __name__ == "__main__":
+
     app.run(host="0.0.0.0", port=8001, debug=True)

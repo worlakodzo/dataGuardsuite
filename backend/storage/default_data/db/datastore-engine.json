@@ -1,57 +1,73 @@
 [
     {
         "_id": "mysql",
+        "ds_type": "datastore-engine",
+        "active": true,
         "name": "MySQL",
-        "description": "",
+        "description": "MySQL",
         "type": "relational",
         "image": "db/mysql-logo.png"
     },
     {
         "_id": "postgresql",
+        "ds_type": "datastore-engine",
+        "active": true,
         "name": "PostgreSQL",
-        "description": "",
+        "description": "PostgreSQL",
         "type": "relational",
         "image": "db/postgresql-logo.png"
     },
     {
         "_id": "mariadb",
+        "ds_type": "datastore-engine",
+        "active": true,
         "name": "MariaDB",
-        "description": "",
+        "description": "MariaDB",
         "type": "relational",
         "image": "db/mariadb-logo.png"
     },
     {
         "_id": "sqlite",
+        "ds_type": "datastore-engine",
+        "active": true,
         "name": "SQLite",
-        "description": "",
+        "description": "SQLite",
         "type": "relational",
         "image": "db/sqlite-logo.png"
     },
     {
         "_id": "mongodb",
-        "name": "Mongmemcached-logo.pngoDB",
-        "description": "",
+        "ds_type": "datastore-engine",
+        "active": true,
+        "name": "MongoDB",
+        "description": "MongoDB",
         "type": "non-relational",
         "image": "db/mongodb-logo.png"
     },
     {
         "_id": "elasticsearch",
+        "ds_type": "datastore-engine",
+        "active": true,
         "name": "ElasticSearch",
-        "description": "",
+        "description": "ElasticSearch",
         "type": "non-relational",
         "image": "db/elasticsearch-logo.png"
     },
     {
         "_id": "redis",
+        "ds_type": "datastore-engine",
+        "active": true,
         "name": "Redis",
-        "description": "",
+        "description": "Redis",
         "type": "non-relational",
         "image": "db/redis-logo.png"
     },
     {
         "_id": "memcached",
+        "ds_type": "datastore-engine",
+        "active": true,
         "name": "Memcached",
-        "description": "",
+        "description": "Memcached",
         "type": "non-relational",
         "image": "db/memcached-logo.png"
     }

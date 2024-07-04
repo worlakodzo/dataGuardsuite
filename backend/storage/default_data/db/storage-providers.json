@@ -1,0 +1,42 @@
+[
+    {
+        "_id": "local",
+        "ds_type": "storage-provider",
+        "active": true,
+        "name": "Local",
+        "storage_name": "Local",
+        "description": "Local storage on the device",
+        "type": "local",
+        "image": "sp/local-storage-logo.png"
+    },
+    {
+        "_id": "aws_s3",
+        "ds_type": "storage-provider",
+        "active": true,
+        "name": "Amazon Web Services",
+        "storage_name": "Amazon S3",
+        "description": "Amazon Web Services",
+        "type": "cloud",
+        "image": "sp/amazon-web-services-logo.png"
+    },
+    {
+        "_id": "azure_blobs",
+        "ds_type": "storage-provider",
+        "active": true,
+        "name": "Microsoft Azure",
+        "storage_name": "Azure Blobs",
+        "description": "Microsoft Azure",
+        "type": "cloud",
+        "image": "sp/microsoft-azure-logo.png"
+    },
+    {
+        "_id": "gcp_gcs",
+        "ds_type": "storage-provider",
+        "active": true,
+        "name": "Google Cloud Platform",
+        "storage_name": "Google Cloud Storage",
+        "description": "Google Cloud Platform",
+        "type": "cloud",
+        "image": "sp/google-cloud-logo.png"
+    }
+]
