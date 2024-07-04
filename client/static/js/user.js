@@ -168,6 +168,9 @@ const saveUserData = (event) => {
                 $.notify("User Saved.", "success");
                 btnCreateUserEl.innerHTML = "Create User";
                 window.location.href = "/users";
+
+            }else if(res.status === 401){
+                window.location.href = "/login";
             }else{
 
                 document.querySelector("#save-error-content").innerHTML = "Failed to create user";
@@ -260,6 +263,8 @@ const getUserProfile =  () => {
     }).then(res => {
         if (res.status === 200){
             return res.json();
+        }else if(res.status === 401){
+            window.location.href = "/login";
         }else{
 
         }
@@ -531,6 +536,8 @@ const updateUserSetting = (event) => {
     }).then(res => {
         if (res.status === 200){
             $.notify("Setting Saved.", "success");
+        }else if(res.status === 401){
+            window.location.href = "/login";
         }
         btnSaveChanagesEl.innerHTML = "Save Changes";
 
@@ -578,6 +585,8 @@ const deleteUser = (event) => {
             userRowEl.style.opacity = '0';
             $.notify("User deleted.", "success");
 
+        }else if(res.status === 401){
+            window.location.href = "/login";
         }else{
             return res.json();
         }

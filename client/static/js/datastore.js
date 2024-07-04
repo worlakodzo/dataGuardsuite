@@ -174,6 +174,9 @@ document.addEventListener("DOMContentLoaded", function(event){
 
                 confirmDeleteClose.click();
                 $.notify("Datastore Deleted.", "success");
+                
+            }else if(res.status === 401){
+                window.location.href = "/login";
             }else{
                 
                 document.getElementById("delete-datastore-error-notify").innerHTML = "Something went wrong";
@@ -284,7 +287,10 @@ const loadDatastoreRecord = () => {
     }).then(res => {
         if (res.status === 200){
            return res.json();
+        }else if(res.status === 401){
+            window.location.href = "/login";
         }
+
     }).then(jsonData => {
 
         const datastoreTypes_ = jsonData.datastore_types;
@@ -763,6 +769,9 @@ const savedatastore = (engineOrStorageProvider, methodType, datastoreId, formId)
         }).then(res => {
             if (res.status === 201 || res.status === 200){
                 return res.json();
+
+            }else if(res.status === 401){
+                window.location.href = "/login";
             }else{
                 // error prompt here
                 errorEl.innerHTML = "Something went wrong, please try again."
