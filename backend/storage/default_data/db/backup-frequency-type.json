@@ -2,27 +2,37 @@
    {
         "_id": "minutely",
         "active": true,
-        "name": "Minutely"
+        "description": "Backup every minute",
+        "name": "Minute",
+        "short_name": "Min"
     },
     {
         "_id": "hourly",
         "active": true,
-        "name": "Hourly"
+        "description": "Backup every hour",
+        "name": "Hourly",
+        "short_name": "Hour"
     },
     {
         "_id": "daily",
         "active": true,
-        "name": "Daily"
+        "description": "Backup every day",
+        "name": "Daily",
+        "short_name": "Day"
     },
     {
         "_id": "weekly",
         "active": true,
-        "name": "Weekly"
+        "description": "Backup every week",
+        "name": "Weekly",
+        "short_name": "Week"
     },
     {
         "_id": "monthly",
         "active": true,
-        "name": "Monthly"
+        "description": "Backup every month",
+        "name": "Monthly",
+        "short_name": "Month"
     }
 
 ]
