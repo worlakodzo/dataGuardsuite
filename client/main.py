@@ -10,10 +10,6 @@ def health():
 
 
 @app.route("/", strict_slashes=False)
-def index():
-    return render_template("landing_page/index.html")
-
-
 @app.route("/login", strict_slashes=False)
 def login():
     return render_template("web_app/login.html")
