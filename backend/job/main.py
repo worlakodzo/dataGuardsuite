@@ -15,14 +15,31 @@ def jobs():
         jobs = BackupSchedule.filter({"master_user_id": identity["master_user_id"]})
         jobs_dict = []
         for job in jobs:
-            jobs_dict.append(job.to_dict())
+            job_dict = job.to_dict()
+            job_dict["datastore_engine"] = Datastore.filter(
+                {"_id": job.datastore_engine_id}
+            )[0].to_dict()
+            job_dict["storage_provider"] = Datastore.filter(
+                {"_id": job.storage_provider_id}
+            )[0].to_dict()
+            jobs_dict.append(job_dict)
 
         return jsonify({"jobs": jobs_dict}), 200
 
     elif request.method == "POST":
         data = request.get_json()
+
+        # Get timestamp
+        time_split = data["start_time"].split(":")
+        hours = int(time_split[0])
+        minutes = int(time_split[0])
+
         data["user_id"] = identity["user_id"]
         data["master_user_id"] = identity["master_user_id"]
+        data["start_hours"] = hours
+        data["start_minutes"] = minutes
+
+        print(data)
         new_job = BackupSchedule(**data)
         res = new_job.save()
         job = BackupSchedule.filter({"_id": res.inserted_id})[0]

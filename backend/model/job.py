@@ -14,28 +14,41 @@ class BackupSchedule:
     def collection_name(cls):
         return cls.__collection_name
 
-    def __int__(
+    def __init__(
         self,
+        name: str = None,
+        description: str = None,
+        enable_automatic_backed_up: bool = False,
         user_id: str = None,
         master_user_id: str = None,
-        datastore_id: str = None,
+        datastore_engine_id: str = None,
+        storage_provider_id: str = None,
         frequency: str = None,
-        backup_date: datetime = None,
-        hours: int = 0,
-        minutes: int = 0,
+        frequency_adjust_value: int = 1,
+        start_time: str = "00:01",
+        start_hours: int = 0,
+        start_minutes: int = 0,
     ):
         """
         Initializes a new Database instance.
         """
 
+        print("start_time: ", start_time)
         self._id = str(uuid.uuid4())
         self.user_id = user_id
         self.master_user_id = master_user_id
-        self.datastore_id = datastore_id
+        self.name = name
+        self.description = description
+        self.enable_automatic_backed_up = enable_automatic_backed_up
+        self.datastore_engine_id = datastore_engine_id
+        self.storage_provider_id = storage_provider_id
+        self.start_time = start_time
         self.frequency = frequency
-        self.backup_date = backup_date
-        self.hours = hours
-        self.minutes = minutes
+        self.frequency_adjust_value = frequency_adjust_value
+        self.backup_at = datetime.utcnow()
+        self.start_hours = start_hours
+        self.start_minutes = start_minutes
+        self.start_time_in_12h_format = self.convert_24h_to_12h_format(start_time)
         self.timestamp = self.get_timestamp()
         self.created_at = datetime.utcnow()
         self.updated_at = datetime.utcnow()
@@ -70,27 +83,32 @@ class BackupSchedule:
         datetime
             The full timestamp for the next backup.
         """
-        return self.backup_date.replace(
-            hour=self.hours, minute=self.minutes, second=0, microsecond=0
-        )
+        return int(self.backup_at.timestamp())
 
     def update_next_backup_date(self):
         """
         Updates the next backup date based on the frequency.
         """
-        if self.frequency.lower() == "daily":
-            self.backup_date += timedelta(days=1)
+
+        if self.frequency.lower() == "minutely":
+            self.backup_at += timedelta(minutes=self.frequency_adjust_value)
+        elif self.frequency.lower() == "hourly":
+            self.backup_at += timedelta(hours=self.frequency_adjust_value)
+        elif self.frequency.lower() == "daily":
+            self.backup_at += timedelta(days=self.frequency_adjust_value)
+        elif self.frequency.lower() == "hourly":
+            self.backup_at += timedelta(hours=self.frequency_adjust_value)
         elif self.frequency.lower() == "weekly":
-            self.backup_date += timedelta(weeks=1)
+            self.backup_at += timedelta(weeks=self.frequency_adjust_value)
         elif self.frequency.lower() == "monthly":
             # Adding a month manually
-            if self.backup_date.month == 12:
-                self.backup_date = self.backup_date.replace(
-                    year=self.backup_date.year + 1, month=1
+            if self.backup_at.month == 12:
+                self.backup_at = self.backup_at.replace(
+                    year=self.backup_at.year + 1, month=self.frequency_adjust_value
                 )
             else:
-                self.backup_date = self.backup_date.replace(
-                    month=self.backup_date.month + 1
+                self.backup_at = self.backup_at.replace(
+                    month=self.backup_at.month + self.frequency_adjust_value
                 )
 
         self.time = self.get_timestamp()
@@ -140,3 +158,24 @@ class BackupSchedule:
         data_dict["created_at"] = self.created_at.isoformat()
         data_dict["updated_at"] = self.updated_at.isoformat()
         return data_dict
+
+    def get_timestamp_for_backup(self):
+        # Get the current date
+        today = datetime.today()
+        # Create a datetime object with the specified hour and minute
+        self.backup_at = datetime.combine(
+            today, datetime.time(hour=self.start_hours, minute=self.start_minutes)
+        )
+        # Convert the datetime object to a timestamp (number of seconds since Unix epoch)
+        return int(self.backup_at.timestamp())
+
+    @staticmethod
+    def convert_24h_to_12h_format(time: str):
+        d = datetime.strptime(time, "%H:%M")
+        return d.strftime("%I:%M %p")
+
+    @staticmethod
+    def generate_backup_name(database_name):
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        file_name_or_directory = f"{database_name}_backup_{timestamp}"
+        return file_name_or_directory

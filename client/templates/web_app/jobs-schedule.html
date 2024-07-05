@@ -1,6 +1,6 @@
-{% extends 'base.html' %}
+{% extends 'web_app/base.html' %}
 
-{% block title %} {{action_type}} Job | backupforce+{% endblock %}
+{% block title %} {{action_type}} Job | dataGuardSuite {% endblock %}
 
 {% block headblock %}
 
@@ -12,7 +12,7 @@
   <h1 id="job-action-type" data-action-type="{{action_type}}">{{action_type}} Job</h1>
   <nav>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{{url_for('job.job_list')}}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{{url_for('jobs_schedule')}}">Home</a></li>
       <li class="breadcrumb-item active">Jobs</li>
     </ol>
   </nav>
@@ -82,15 +82,15 @@
 
 
                     <div class="col-6 other-info">
-                      <label for="interval-type" class="form-label"><strong>Interval</strong> <span style="color: red;">*</span></label>
+                      <label for="interval-type" class="form-label"><strong>Frequency</strong> <span style="color: red;">*</span></label>
                       <select id="interval-type" class="form-select">
                       </select>
                       <p id="interval-type-error" style="color: red; display: none;">Interval required</p>
                     </div>
 
                     <div class="col-6 other-info">
-                      <label for="interval-value" class="form-label"><strong>Interval Value</strong> <span style="color: red;">*</span></label>
-                      <input type="number" class="form-control" id="interval-value">
+                      <label for="interval-value" class="form-label"><strong>Adjust Frequency</strong> </label>
+                      <input type="number" class="form-control" value="1" id="interval-value">
                       <p id="interval-value-error" style="color: red; display: none;">Interval Value url required</p>
                     </div>
 
@@ -134,7 +134,7 @@
 
             <div>
               <button style="float: right;" id="btn-save-job" type="submit" class="btn btn-primary">Save</button>
-              <a style="float: right; margin-right: 5px;" href="{{url_for('job.job_list')}}" type="button" class="btn btn-secondary">Cancel</a>
+              <a style="float: right; margin-right: 5px;" href="{{url_for('jobs')}}" type="button" class="btn btn-secondary">Cancel</a>
             </div>
 
             <!--Begin Error-->
@@ -167,5 +167,5 @@
 {% endblock %}
 
 {% block js %}
-<script src="{{url_for('static', filename='js/jobs.js')}}"></script>
+<script type="module" src="{{url_for('static', filename='js/jobs.js')}}"></script>
 {% endblock %}

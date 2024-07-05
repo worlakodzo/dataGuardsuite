@@ -68,7 +68,25 @@ def jobs():
 
 @app.route("/jobs/schedule", strict_slashes=False)
 def jobs_schedule():
-    return render_template("web_app/jobs-schedule.html", is_jobs=True)
+    return render_template(
+        "web_app/jobs-schedule.html", method="POST", action_type="Add", is_jobs=True
+    )
+
+
+@app.route("/jobs/schedule/edit/<string:job_id>", strict_slashes=False)
+def jobs_schedule_edit(job_id):
+    return render_template(
+        "web_app/jobs-schedule.html",
+        job_id=job_id,
+        method="PUT",
+        action_type="Update",
+        is_jobs=True,
+    )
+
+
+@app.route("/jobs/backups", strict_slashes=False)
+def jobs_backup():
+    return render_template("web_app/backup-manager.html", is_backup=True)
 
 
 if __name__ == "__main__":

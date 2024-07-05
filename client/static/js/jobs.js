@@ -110,7 +110,7 @@ const loadBasicInfo = (methodType) => {
     document.querySelector("#page-spinner").style.display = "block";
     document.querySelector("#job-form").style.display = "none";
 
-    const url = `${base_url}/generalinfo`;
+    const url = `${base_url}/jobs/generalinfo`;
     fetch(url, {
         method: "GET",
         headers: {
@@ -145,8 +145,8 @@ const loadBasicInfo = (methodType) => {
 
 
         // load database engine and storage provider
-        optionContentDatabaseEngine = '<option value="" selected disabled>--please choose--</option>';
-        optionContentStorageProvider = '<option value="" selected disabled>--please choose--</option>';
+        let optionContentDatabaseEngine = '<option value="" selected disabled>--please choose--</option>';
+        let optionContentStorageProvider = '<option value="" selected disabled>--please choose--</option>';
         for (let datastore of datastores){
             if (datastore.ds_details.ds_type === "datastore-engine"){
                 optionContentDatabaseEngine += `<option value="${datastore._id}">${datastore.ds_details.name} => ${datastore._id}</option>`;
@@ -221,15 +221,20 @@ const loadJobForUpdate = () => {
     const jobFormEl = document.querySelector("#job-form");
     jobFormEl.style.display = "none";
     const jobId = jobFormEl.getAttribute("data-job-id");
+    const url = `${base_url}/jobs/${jobId}`;
 
-
-    fetch(`/jobs/${jobId}`, {
+    fetch(url, {
         method: "GET",
-        headers: {"Content-Type": "application/json"}
+        headers: {
+            "Content-Type": "application/json",
+             "Authorization": `Bearer ${getToken()}`
+            }
     }).then(res => {
 
         if (res.status === 200){
            return res.json();
+        }else if(res.status === 401){
+            window.location.href = "/login";
         }
 
     }).then(jsonData => {
@@ -274,16 +279,16 @@ const formatJobData = (job, count) => {
     return `
             <tr id="job-list-row-id-${job._id}" class="list-fade">
                 <td>${count}</td>
-                <td>${job.job_name}</td>
-                <td>${job.job_start_time_12_hour_time}</td>
-                <td>${job.interval_value} ${job.interval_type}</td>
-                <td>${job.database_engine.engine_or_storage_provider.name}</td>
-                <td>${job.storage_provider.engine_or_storage_provider.storage_name}</td>
+                <td>${job.name}</td>
+                <td>${job.start_time_in_12h_format}</td>
+                <td>${job.frequency_adjust_value} ${job.frequency}</td>
+                <td>${job.datastore_engine.ds_details.name}</td>
+                <td>${job.storage_provider.ds_details.name}</td>
 
                 <td style="float: right">
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <a type="button" class="btn btn-primary" href="/job_edit/${job._id}"><i class="ri-edit-box-line"></i></a>
-                        <a type="button" data-id="${job._id}"  data-job-name="${job.job_name}" data-bs-toggle="modal" data-bs-target="#delete-job-modal" class="btn btn-danger delete-job"><i class="bx bxs-trash-alt"></i></a>
+                        <a type="button" data-id="${job._id}"  data-job-name="${job.name}" data-bs-toggle="modal" data-bs-target="#delete-job-modal" class="btn btn-danger delete-job"><i class="bx bxs-trash-alt"></i></a>
                     </div>
                 </td>
 
@@ -309,14 +314,14 @@ const validateInput = () => {
 
     // form data
     jobData = {
-        job_name: jobName,
+        name: jobName,
         description: description,
         enable_automatic_backed_up: enableAutomaticBackedUp,
-        job_start_time: jobStartTime,
-        interval_type: intervalType,
-        interval_value: intervalValue,
-        database_credential_id: databaseCredentialId,
-        backup_storage_provider_credential_id: backupStorageProviderCredentialId,
+        start_time: jobStartTime,
+        frequency: intervalType,
+        frequency_adjust_value: intervalValue,
+        datastore_engine_id: databaseCredentialId,
+        storage_provider_id: backupStorageProviderCredentialId,
     }
 
 
@@ -371,7 +376,6 @@ const validateInput = () => {
 const saveJob = (methodType, jobId) => {
     const btnSaveEl = document.getElementById(`btn-save-job`);
 
-
     // Validate form input
     if (validateInput()){
 
@@ -385,21 +389,15 @@ const saveJob = (methodType, jobId) => {
         let data = {};
 
         if (methodType === "POST"){
-
             url = `${base_url}/jobs`;
-
-            // format data
             data = jobData;
-
 
         }else {
 
-            // format data
             data = jobData
         }
 
 
-        // Save data
         fetch (url, {
             method: methodType,
             body: JSON.stringify(data),
@@ -409,26 +407,18 @@ const saveJob = (methodType, jobId) => {
                 }
         }).then(res => {
 
-            return res.json();
+            if (res.status === 201){
+                return res.json();
+            }else if(res.status === 401){
+                window.location.href = "/login";
+            }
 
         }).then(jsonData => {
-
-            console.log(jsonData)
-
-            if (jsonData.success){
-
-
+                console.log(jsonData);
+                const job = jsonData.job;
                 btnSaveEl.innerHTML = "Save";
-                $.notify("Credential Saved.", "success");
-                window.location.href = `/backup_list/<string:job_id>${jsonData.job._id}`;
-
-            }else{
-
-                // error prompt here
-                errorEl.innerHTML = jsonData.message
-                errorContainerEl.style.display = "block";
-                btnSaveEl.innerHTML = "Save";
-            }
+                $.notify("Job Saved.", "success");
+                window.location.href = `/backups/${job._id}`;
 
         }).catch(err => {
             
@@ -438,8 +428,6 @@ const saveJob = (methodType, jobId) => {
             errorContainerEl.style.display = "block";
 
         });
-
-
 
     }
 
