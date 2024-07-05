@@ -5,3 +5,4 @@ flask_bcrypt
 flask_jwt_extended
 flask_mail
 cryptography
+pymongo
