@@ -140,9 +140,9 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 
 ## Acknowledgements
 
-- ALX Africa Software Engineering Program
+- [ALX Africa](https://www.alxafrica.com/)
 - All contributors and collaborators who helped make this project possible.
 
 ---
 
-DataGuardSuite is a project that was inspired by the need for a reliable and secure database backup solution for businesses. Through this project, I aimed to ensure that it meets the highest standards of data security and reliability, reflecting my dedication and hard work as part of the ALX Africa software engineering program.
+DataGuardSuite is a project that was inspired by the need for a reliable and secure database backup solution for businesses. Through this project, I aimed to ensure that it meets the highest standards of data security and reliability, reflecting my dedication and hard work as part of the [ALX Africa](https://www.alxafrica.com/) software engineering program.
