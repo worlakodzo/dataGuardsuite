@@ -1,6 +1,132 @@
 <!DOCTYPE html>
-<html>
-    <body>
-        <h1>Landing page</h1>
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="favico.png" rel="icon"> 
+    <title>DataGuardSuite</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .cover-image {
+            height: 100vh;
+            background: url('background-1.jpg') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+        .cover-content {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .feature {
+            margin: 20px 0;
+        }
+        .about-section {
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Intro Section -->
+    <header class="cover-image">
+        <div class="cover-content">
+            <h1>DataGuardSuite</h1>
+            <p>Secure and reliable database backup solutions</p>
+            <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#presentation">Presentation</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+
+
+                </ul>
+            </nav>
+            <a target="_blank" href="https://worlako.pythonanywhere.com/" class="btn btn-primary mt-3">Go to App</a>
+            <a target="_blank" href="https://github.com/worlakodzo/dataGuardsuite" class="btn btn-primary mt-3">Go to Source Code</a>
+        </div>
+    </header>
+
+    <!-- Feature Section -->
+    <section id="features" class="container mt-5">
+        <h2>Core Features</h2>
+        <div class="row">
+            <div class="col-md-4 feature">
+                <img src="datastore-configuration.png" class="img-fluid" alt="Datastore Configuration">
+                <h3>Datastore Configuration</h3>
+                <p>Effortlessly configure and connect your databases, including:</p>
+                <ul>
+                    <li>Relational databases (PostgreSQL, MySQL)</li>
+                    <li>NoSQL databases (MongoDB)</li>
+                    <li>Cache (Redis, Memcached)</li>
+                    <li>Storage types (Local, S3)</li>
+                    <li>Test connections to ensure seamless backups</li>
+                </ul>
+            </div>
+            <div class="col-md-4 feature">
+                <img src="backup-scheduling.png" class="img-fluid" alt="Backup Scheduling">
+                <h3>Backup Scheduling</h3>
+                <p>Take control of your backup schedule with:</p>
+                <ul>
+                    <li>Automated backups (daily, weekly, monthly)</li>
+                    <li>Manual backup initiation</li>
+                    <li>Retention period (Days, Weeks, Months)</li>
+                </ul>
+            </div>
+            <div class="col-md-4 feature">
+                <img src="backup-management.png" class="img-fluid" alt="Backup Management">
+                <h3>Backup Management</h3>
+                <p>Stay informed and in control with:</p>
+                <ul>
+                    <li>Real-time backup status and progress</li>
+                    <li>Access to backup history and logs</li>
+                    <li>Backup failure notifications</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Presentation Section -->
+    <section id="presentation" class="about-section mt-5">
+        <div id="1720268452018" style="width:100%;height:650px;margin:auto;display:block;position: relative;border:2px solid #dee1e5;border-radius:3px;">
+            <iframe allowfullscreen="true" style="width:100%;height:100%;border:none;" src="https://app.presentations.ai/view/MJI6wx" scrolling="no"></iframe>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section mt-5">
+        <div class="container">
+            <h2>About DataGuardSuite</h2>
+            <p>This project was inspired by the need for a reliable and secure database backup solution for businesses. I worked tirelessly to develop DataGuardSuite, ensuring that it meets the highest standards of data security and reliability.</p>
+
+            <h3>Team Members</h3>
+            <ul>
+                <li>
+                    <a target="_blank" href="https://www.linkedin.com/in/worlakodzo">LinkedIn</a> |
+                    <a target="_blank" href="https://github.com/worlakodzo">GitHub</a> |
+                    <a target="_blank" href="https://twitter.com/worlakodzo">Twitter</a>
+                </li>
+            </ul>
+            <h3>Project Repository</h3>
+            <p><a target="_blank" href="https://github.com/worlakodzo/dataGuardsuite">dataGuardsuite (click to see the source code)</a></p>
+        </div>
+    </section>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>
