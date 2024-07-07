@@ -112,6 +112,7 @@ DataGuardSuite provides a robust set of API routes:
 
 4. Set up environment variables (rename `env.sample` to `.env` and add your configurations):
 
+4. Change the api base_url variable in the `client/static/js/variables.js` file to the appropriate backend server url.
 
 5. Run the application:
     ```bash
@@ -128,7 +129,9 @@ DataGuardSuite provides a robust set of API routes:
 
 ## Usage
 
-1. Access the application at `http://127.0.0.1:8001`.
+1. Access the application at 
+- Backend: `http://127.0.0.1:8001`
+- Client: `http://127.0.0.1:8000`
 2. Register a new user and log in.
 3. Configure your databases and schedule backups.
 4. Monitor the backup status and manage your backups through the dashboard.
