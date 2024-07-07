@@ -119,12 +119,16 @@ DataGuardSuite provides a robust set of API routes:
     # Run the backend server
     python -m backend.main 
     or
-    uvicorn backend.main:app --port 8001 --host 0.0.0.0 --reload
+    gunicorn backend.main:app -w 1 --bind 0.0.0.0:8001 --reload
 
     # Run the client server
     python -m client.main
     or
-    uvicorn client.main:app --port 8000 --host 0.0.0.0 --reload 
+    gunicorn client.main:app -w 1 --bind 0.0.0.0:8000 --reload 
+
+    you can also increase the number of workers to improve performance
+    gunicorn -w 2 backend.main:app --bind 0.0.0.0:8001
+    gunicorn -w 2 client.main:app --bind 0.0.0.0:8000
     ```
 
 ## Usage
