@@ -16,7 +16,7 @@ DataGuardSuite is a web application designed to facilitate the backup of various
 
 ## Overview
 
-DataGuardSuite enables enterprises to sign up, configure their database backup settings, and select a preferred cloud storage provider. The MVP focuses on delivering essential features to ensure a solid foundation for future enhancements.
+DataGuardSuite enables businesses to sign up, configure their database backup settings, and select a preferred cloud storage provider. The MVP focuses on delivering essential features to ensure a solid foundation for future enhancements.
 
 ## System Architecture
 
